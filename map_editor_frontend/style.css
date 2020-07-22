@@ -1,0 +1,38 @@
+.header-parent {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  width: 100%;
+  height: 100%;
+  outline: red solid 2px
+}
+
+.sidebar-parent {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: minmax(100px, 20%) 1fr;
+  outline: blue solid 2px
+}
+
+#map {
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(20, 1fr);
+  grid-template-rows: repeat(20, 1fr)
+}
+
+.tile {
+  /* width: 5%;
+  height: 5%; */
+  outline: green solid 5px;
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
