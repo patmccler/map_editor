@@ -1,32 +1,68 @@
 .header-parent {
   display: grid;
-  grid-template-rows: auto 1fr auto;
-  width: 100%;
+  grid-template: 5% 90% 5% / 5% 90% 5%;
   height: 100%;
   outline: red solid 2px
 }
 
-.sidebar-parent {
-  width: 100%;
-  height: 100%;
-  display: grid;
-  grid-template-columns: minmax(100px, 20%) 1fr;
-  outline: blue solid 2px
+header {
+  grid-column: 1 / 4;
 }
 
-#map {
-  height: 100%;
+footer {
+  grid-column: 1 / 4;
+}
+
+.left-side {
+  grid-column: 1 / 2;
+}
+
+.right-side {
+  grid-column: 3 / 4;
+}
+
+.center {
+  grid-column: 2/3;
   display: grid;
-  grid-template-columns: repeat(20, 1fr);
-  grid-template-rows: repeat(20, 1fr)
+  place-items: center;
+  overflow: scroll;
+}
+
+#map-top-header {
+  width: 100%;
+  grid-column-start: span 11;
+  display: grid;
+  grid-template: 1fr / repeat(11, 1fr);
+  /* place-items: stretch; */
+}
+
+#map-left-header {
+  height: 100%;
+  width: 100%;
+  grid-row: span 10;
+}
+
+
+
+#map {
+  grid-area: 2 / 2;
+  width: 100%;
+  height: 100%;
+  /* display: grid; */
+  /* /* grid-template-columns: repeat(10, 1fr); */
 }
 
 .tile {
-  /* width: 5%;
-  height: 5%; */
+  width: 100%;
+  height: 0;
+  padding-bottom: 100%;
   outline: green solid 5px;
 }
 
+.tile.map-header {
+  place-self: center center;
+  outline: none;
+}
 body {
   width: 100vw;
   height: 100vh;
