@@ -25,6 +25,7 @@ footer {
   display: flex;
   flex-direction: column;
   overflow: scroll;
+  padding: 7px;
 }
 
 .map-row {
@@ -51,6 +52,8 @@ footer {
 
 .tile.map-header {
   outline: none;
+  padding-bottom: 50%;
+  text-align: center;
 }
 
 .map-top-header .map-header {
