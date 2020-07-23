@@ -6,7 +6,14 @@ class Level {
     this.name = name
     this.width = width
     this.height = height
+    this.renderable = false
   }
+}
+
+Level.prototype.render = function() {
+  console.log(this)
+  console.log(this.name)
+  this.renderable = false
 }
 
 document.addEventListener("DOMContentLoaded", e => {
@@ -16,14 +23,28 @@ document.addEventListener("DOMContentLoaded", e => {
     'Content-Type': 'application/json'
   }
 
+  let levels;
+  let currentLevel;
 
-  const levels = fetchAllLevels()
+  function loop() {
+    if (currentLevel && currentLevel.renderable) {
+      console.log(currentLevel)
+      currentLevel.render()
+    }
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
 
+  fetchAllLevels()
   loadCurrentMap()
   function fetchAllLevels() {
     fetch(LEVELS_URL, {HEADERS})
     .then(resp => resp.json())
-    .then(levels => console.log(levels))
+    .then(allLevels => {
+      levels = allLevels.map(level => new Level(level))
+      currentLevel = levels[0]
+      currentLevel.renderable = true
+    })
   }
 })
 
