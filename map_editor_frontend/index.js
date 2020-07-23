@@ -11,8 +11,7 @@ class Level {
 }
 
 Level.prototype.render = function() {
-  console.log(this)
-  console.log(this.name)
+  loadCurrentLevel(this)
   this.renderable = false
 }
 
@@ -20,7 +19,8 @@ document.addEventListener("DOMContentLoaded", e => {
   const BASE_URL = "http://localhost:3000"
   const LEVELS_URL = `${BASE_URL}/levels`
   const HEADERS = {
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
+    "Accept": "application/json"
   }
 
   let levels;
@@ -28,7 +28,6 @@ document.addEventListener("DOMContentLoaded", e => {
 
   function loop() {
     if (currentLevel && currentLevel.renderable) {
-      console.log(currentLevel)
       currentLevel.render()
     }
     requestAnimationFrame(loop);
@@ -36,12 +35,13 @@ document.addEventListener("DOMContentLoaded", e => {
   requestAnimationFrame(loop);
 
   fetchAllLevels()
-  loadCurrentMap()
   function fetchAllLevels() {
     fetch(LEVELS_URL, {HEADERS})
     .then(resp => resp.json())
     .then(allLevels => {
-      levels = allLevels.map(level => new Level(level))
+      levels = allLevels.map(level => {
+        return Object.assign(new Level(), level)
+      })
       currentLevel = levels[0]
       currentLevel.renderable = true
     })
@@ -49,32 +49,24 @@ document.addEventListener("DOMContentLoaded", e => {
 })
 
 
-
-
-/**TODO: actually fetch this data
- *
- */
-function fetchCurrentMap() {
-  return (new Array(10).fill(new Array(20).fill("")))
-}
-
-function loadCurrentMap() {
-  let mapData = fetchCurrentMap()
+// TODO:
+function loadCurrentLevel(level) {
   mapDiv = document.querySelector("#map")
   mapDiv.innerHTML = ""
-  mapDiv.appendChild(buildHeaderRow(mapData[0].length))
+  mapDiv.appendChild(buildHeaderRow(level.width))
 
-
-
-  let rows = mapData.map((row, i) => buildMapRow(row, i))
-  rows.forEach(row => mapDiv.appendChild(row))
+  for(let r = 0; r < level.height; r++) {
+    mapDiv.appendChild(buildLevelRow(r, level.width))
+  }
 }
 
-function buildMapRow(row, index) {
+function buildLevelRow(row, columns) {
   let mapRowDiv = document.createElement("div")
   mapRowDiv.classList.add("map-row")
-  mapRowDiv.appendChild(headerTileTemplate(index))
-  row.forEach(tile => mapRowDiv.appendChild(tileTemplate(tile)))
+  mapRowDiv.appendChild(headerTileTemplate(row))
+  for(let col = 0; col < columns; col++) {
+     mapRowDiv.appendChild(tileTemplate())
+  }
   return mapRowDiv
 }
 
