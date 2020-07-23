@@ -68,7 +68,6 @@ function buildLevelOption(level) {
 }
 
 
-// TODO:
 function renderLevel(level) {
   mapDiv = document.querySelector("#map")
   mapDiv.innerHTML = ""
@@ -79,10 +78,20 @@ function renderLevel(level) {
   }
 
   renderLevelName(level.name)
+  renderLevelWidth(level.width)
+  renderLevelHeight(level.height)
 }
 
 function renderLevelName(name) {
   document.getElementById("level-name").innerText = name
+}
+
+function renderLevelWidth(width) {
+  document.getElementById("level-width").innerText = width
+}
+
+function renderLevelHeight(height) {
+  document.getElementById("level-height").innerText = height
 }
 
 function buildLevelRow(row, columns) {
@@ -90,15 +99,20 @@ function buildLevelRow(row, columns) {
   mapRowDiv.classList.add("map-row")
   mapRowDiv.appendChild(headerTileTemplate(row))
   for(let col = 0; col < columns; col++) {
-     mapRowDiv.appendChild(tileTemplate())
+     mapRowDiv.appendChild(tileTemplate(col, row))
   }
   return mapRowDiv
 }
 
-function tileTemplate(tile) {
+function tileTemplate(col, row) {
   let tileDiv = document.createElement("div")
   tileDiv.classList.add("tile")
+  tileDiv.addEventListener("click", e => tileClicked(col, row))
   return tileDiv
+}
+
+function tileClicked(col, row) {
+  console.log(`Tile at ${col}, ${row} clicked.`)
 }
 
 function headerTileTemplate(index) {
