@@ -1,7 +1,34 @@
 
 console.log("Index.js running")
 
-document.addEventListener("DOMContentLoaded", loadCurrentMap)
+class Level {
+  constructor(name, width, height) {
+    this.name = name
+    this.width = width
+    this.height = height
+  }
+}
+
+document.addEventListener("DOMContentLoaded", e => {
+  const BASE_URL = "http://localhost:3000"
+  const LEVELS_URL = `${BASE_URL}/levels`
+  const HEADERS = {
+    'Content-Type': 'application/json'
+  }
+
+
+  const levels = fetchAllLevels()
+
+  loadCurrentMap()
+  function fetchAllLevels() {
+    fetch(LEVELS_URL, {HEADERS})
+    .then(resp => resp.json())
+    .then(levels => console.log(levels))
+  }
+})
+
+
+
 
 /**TODO: actually fetch this data
  *
