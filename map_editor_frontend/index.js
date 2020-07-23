@@ -11,7 +11,7 @@ class Level {
 }
 
 Level.prototype.render = function() {
-  loadCurrentLevel(this)
+  renderLevel(this)
   this.renderable = false
 }
 
@@ -42,15 +42,34 @@ document.addEventListener("DOMContentLoaded", e => {
       levels = allLevels.map(level => {
         return Object.assign(new Level(), level)
       })
-      currentLevel = levels[0]
-      currentLevel.renderable = true
+      populateLevelSelect(levels)
+      chooseLevel(levels[0].id)
     })
   }
+
+  function chooseLevel(levelID) {
+    currentLevel = levels.find(level => level.id === levelID)
+    currentLevel.renderable = true
+  }
+
+  document.querySelector("#levels-select").addEventListener("change", e => chooseLevel(parseInt(e.target.value)))
 })
+
+function populateLevelSelect(levels) {
+  let levelSelect = document.querySelector("#levels-select")
+  levels.forEach(level => levelSelect.appendChild(buildLevelOption(level)))
+}
+
+function buildLevelOption(level) {
+  let opt = document.createElement("option")
+  opt.value = level.id
+  opt.innerText = level.name
+  return opt
+}
 
 
 // TODO:
-function loadCurrentLevel(level) {
+function renderLevel(level) {
   mapDiv = document.querySelector("#map")
   mapDiv.innerHTML = ""
   mapDiv.appendChild(buildHeaderRow(level.width))
@@ -58,6 +77,12 @@ function loadCurrentLevel(level) {
   for(let r = 0; r < level.height; r++) {
     mapDiv.appendChild(buildLevelRow(r, level.width))
   }
+
+  renderLevelName(level.name)
+}
+
+function renderLevelName(name) {
+  document.getElementById("level-name").innerText = name
 }
 
 function buildLevelRow(row, columns) {
