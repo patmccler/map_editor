@@ -22,34 +22,24 @@ footer {
 }
 
 .center {
-  grid-column: 2/3;
-  display: grid;
-  place-items: center;
+  display: flex;
+  flex-direction: column;
   overflow: scroll;
 }
 
-#map-top-header {
+.map-row {
   width: 100%;
-  grid-column-start: span 11;
+  grid-column: 1 / -1;
   display: grid;
-  grid-template: 1fr / repeat(11, 1fr);
-  /* place-items: stretch; */
+  grid-template-columns: repeat(auto-fit, minmax(10px, 1fr));
 }
 
 #map-left-header {
   height: 100%;
-  width: 100%;
-  grid-row: span 10;
-}
-
-
-
-#map {
-  grid-area: 2 / 2;
-  width: 100%;
-  height: 100%;
-  /* display: grid; */
-  /* /* grid-template-columns: repeat(10, 1fr); */
+  grid-row: 2 / -1;
+  grid-column: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10px, 1fr));
 }
 
 .tile {
@@ -60,9 +50,18 @@ footer {
 }
 
 .tile.map-header {
-  place-self: center center;
   outline: none;
 }
+
+.map-top-header .map-header {
+  grid-row: 1 / 1
+}
+
+.map-left-header .map-header {
+  grid-column: 1 / 1
+}
+
+
 body {
   width: 100vw;
   height: 100vh;
