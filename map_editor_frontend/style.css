@@ -21,7 +21,7 @@ footer {
   grid-column: 3 / 4;
 }
 
-.center {
+#map {
   display: flex;
   flex-direction: column;
   overflow: scroll;
