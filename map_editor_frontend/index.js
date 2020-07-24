@@ -31,13 +31,16 @@ class Level {
   }
 
   addTile(x,y) {
-    console.log(this)
-    console.log(this.tiles)
     this.tiles.push(new Tile(x,y))
   }
 
   removeTile(tile) {
     this.tiles.splice(this.tiles.indexOf(tile),1)
+    this.resetTile(tile)
+  }
+
+  resetTile(tile) {
+    this.findTileDiv(tile).className = "tile"
   }
 
   render() {
@@ -55,8 +58,18 @@ class Level {
       this.renderLevelHeight()
       this.firstRender = false
     }
-
+    this.renderTiles()
     this.renderable = false
+  }
+
+  renderTiles() {
+    this.tiles.forEach(tile => {
+      this.findTileDiv(tile).classList.add("basic-tile")
+    })
+  }
+
+  findTileDiv(tile) {
+    return document.getElementsByClassName("map-row")[tile.y + 1].children[tile.x + 1]
   }
 
   renderLevelName() {
@@ -89,6 +102,7 @@ class Level {
   }
 
   tileClicked(col, row) {
+    this.renderable = true
     return this.toggleTile(col,row)
   }
 
