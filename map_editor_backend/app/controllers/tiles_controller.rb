@@ -10,6 +10,15 @@ class TilesController < ApplicationController
     end
   end
 
+  def destroy
+    tile = Tile.find(params[:id])
+    if tile.destroy
+      render json: tile, only: %i[x y id]
+    else
+      render json: { error: "Couldn't delete tile with id #{params[:id]}" }
+    end
+  end
+
 private
 
   def tile_params

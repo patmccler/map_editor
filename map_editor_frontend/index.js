@@ -16,8 +16,12 @@ class Level {
     this.tiles = []
   }
 
-  get tileURL() {
+  get tilePostURL() {
     return `http://localhost:3000/levels/${this.id}/tiles`
+  }
+
+  tileDeleteURL(tileID) {
+    return `http://localhost:3000/levels/${this.id}/tiles/${tileID}`
   }
 
   /**
@@ -51,7 +55,7 @@ class Level {
       method: "POST",
       body: JSON.stringify(tile)
     }
-    fetch(this.tileURL, configObj)
+    fetch(this.tilePostURL, configObj)
     .then(resp => resp.json())
     .then(newTile => console.log(newTile)
     )
@@ -60,6 +64,21 @@ class Level {
   removeTile(tile) {
     this.tiles.splice(this.tiles.indexOf(tile),1)
     this.resetTile(tile)
+    this.deleteTile(tile)
+  }
+
+  deleteTile(tile) {
+    let configObj = {
+      headers: {
+        'Content-Type': 'application/json',
+        "Accept": "application/json"
+      },
+      method: "DELETE"
+    }
+    fetch(this.tileDeleteURL(tile.id), configObj)
+    .then(resp => resp.json())
+    .then(newTile => console.log(newTile)
+    )
   }
 
   resetTile(tile) {
