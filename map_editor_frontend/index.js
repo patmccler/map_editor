@@ -10,6 +10,7 @@ class Level {
     this.width = width
     this.height = height
     this.renderable = false
+    this.firstRender = true
 
     this.tiles = []
   }
@@ -40,17 +41,21 @@ class Level {
   }
 
   render() {
-    let mapDiv = document.querySelector("#map")
-    mapDiv.innerHTML = ""
-    mapDiv.appendChild(this.buildHeaderRow(this.width))
+    if(this.firstRender) {
+      let mapDiv = document.querySelector("#map")
+      mapDiv.innerHTML = ""
+      mapDiv.appendChild(this.buildHeaderRow(this.width))
 
-    for(let r = 0; r < this.height; r++) {
-      mapDiv.appendChild(this.buildLevelRow(r, this.width))
+      for(let r = 0; r < this.height; r++) {
+        mapDiv.appendChild(this.buildLevelRow(r, this.width))
+      }
+
+      this.renderLevelName()
+      this.renderLevelWidth()
+      this.renderLevelHeight()
+      this.firstRender = false
     }
 
-    this.renderLevelName()
-    this.renderLevelWidth()
-    this.renderLevelHeight()
     this.renderable = false
   }
 
@@ -149,6 +154,7 @@ class UIController {
   chooseLevel(levelID) {
     this.currentLevel = this.levels.find(level => level.id === levelID)
     this.currentLevel.renderable = true
+    this.currentLevel.firstRender = true
   }
 
   populateLevelSelect(levels) {
