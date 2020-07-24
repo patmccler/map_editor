@@ -6,6 +6,7 @@ console.log("Index.js running")
  */
 class Level {
   constructor(name, width, height) {
+    //Better way to get base URL in here?
     this.name = name
     this.width = width
     this.height = height
@@ -13,6 +14,10 @@ class Level {
     this.firstRender = true
 
     this.tiles = []
+  }
+
+  get tileURL() {
+    return `http://localhost:3000/levels/${this.id}/tiles`
   }
 
   /**
@@ -31,7 +36,24 @@ class Level {
   }
 
   addTile(x,y) {
-    this.tiles.push(new Tile(x,y))
+    let tile = new Tile(x,y)
+    this.tiles.push(tile)
+    this.postTile(tile)
+  }
+
+  //Make a fetcher class maybe, to hold urls?
+  postTile(tile) {
+    let configObj = {
+      headers: {
+        'Content-Type': 'application/json',
+        "Accept": "application/json"
+      },
+      method: "POST"
+    }
+    fetch(this.tileURL, configObj)
+    .then(resp => resp.json())
+    .then(newTile => console.log(newTile)
+    )
   }
 
   removeTile(tile) {
@@ -206,6 +228,7 @@ document.addEventListener("DOMContentLoaded", e => {
     fetch(LEVELS_URL, {HEADERS})
     .then(resp => resp.json())
     .then(allLevels => {
+      console.log(allLevels)
       UI_CONTROLLER.initLevels(allLevels)
     })
   }
