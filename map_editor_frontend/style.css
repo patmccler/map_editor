@@ -59,7 +59,7 @@ footer {
 }
 
 .tile.map-header {
-  outline: none;
+  border: none;
   padding-bottom: 75%;
   text-align: center;
 }
