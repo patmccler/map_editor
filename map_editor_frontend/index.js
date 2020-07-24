@@ -14,6 +14,20 @@ class Level {
     this.firstRender = true
 
     this.tiles = []
+    this.map = []
+  }
+
+  static buildFromJSON(levelJSON) {
+    let newLevel = Object.assign(new Level(), levelJSON)
+    newLevel.buildMap()
+    return newLevel
+  }
+
+  //called when level first generated from JSON
+  buildMap() {
+    // cant map on empty array -> fill null then map
+    this.map = new Array(this.height).fill(null).map(arr => new Array(this.width))
+    this.tiles.forEach(tile => this.map[tile.y][tile.x] = tile)
   }
 
   get tilePostURL() {
@@ -108,6 +122,10 @@ class Level {
     })
   }
 
+  findNeighborTiles(tile) {
+
+  }
+
   findTileDiv(tile) {
     return document.getElementsByClassName("map-row")[tile.y + 1].children[tile.x + 1]
   }
@@ -198,9 +216,7 @@ class UIController {
   }
 
   initLevels(levels) {
-    this.levels = levels.map(level => {
-      return Object.assign(new Level(), level)
-    })
+    this.levels = levels.map(level => Level.buildFromJSON(level))
     this.populateLevelSelect(levels)
     this.chooseLevel(levels[0].id)
   }
@@ -245,9 +261,6 @@ document.addEventListener("DOMContentLoaded", e => {
   function fetchAllLevels() {
     fetch(LEVELS_URL, {HEADERS})
     .then(resp => resp.json())
-    .then(allLevels => {
-      console.log(allLevels)
-      UI_CONTROLLER.initLevels(allLevels)
-    })
+    .then(allLevels => UI_CONTROLLER.initLevels(allLevels))
   }
 })
