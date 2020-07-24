@@ -19,15 +19,30 @@ class Level {
 
   static buildFromJSON(levelJSON) {
     let newLevel = Object.assign(new Level(), levelJSON)
-    newLevel.buildMap()
+    newLevel.processTiles()
     return newLevel
   }
-
   //called when level first generated from JSON
-  buildMap() {
+  processTiles() {
     // cant map on empty array -> fill null then map
     this.map = new Array(this.height).fill(null).map(arr => new Array(this.width))
-    this.tiles.forEach(tile => this.map[tile.y][tile.x] = tile)
+    this.tiles = this.tiles.map(tile => {
+      tile = Object.assign(new Tile(), tile)
+      this.map[tile.y][tile.x] = tile
+      return tile
+    })
+  }
+
+  setMapAt(x,y, value) {
+    this.map[y][x] = value
+  }
+
+  getMapAt(x,y) {
+    return this.map[y][x]
+  }
+
+  clearMapAt(x,y) {
+    delete this.map[y][x]
   }
 
   get tilePostURL() {
@@ -56,6 +71,7 @@ class Level {
   addTile(x,y) {
     let tile = new Tile(x,y)
     this.tiles.push(tile)
+    this.setMapAt(x,y, tile)
     this.postTile(tile)
   }
 
@@ -78,6 +94,7 @@ class Level {
   removeTile(tile) {
     this.tiles.splice(this.tiles.indexOf(tile),1)
     this.resetTile(tile)
+    this.clearMapAt(tile.x,tile.y)
     this.deleteTile(tile)
   }
 
