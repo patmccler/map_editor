@@ -2,6 +2,7 @@ class TilesController < ApplicationController
   def create
     level = Level.find(params[:level_id])
     tile = level.tiles.build(tile_params)
+
     if tile.save
       render json: tile, only: %i[x y id]
     else
