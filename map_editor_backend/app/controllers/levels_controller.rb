@@ -1,10 +1,10 @@
 class LevelsController < ApplicationController
   def show
     level = Level.find(params[:id])
-    render json: level.to_json( except: %i[created_at updated_at])
+    render json: level.to_json(include: :tiles, except: %i[created_at updated_at])
   end
 
   def index
-    render json: Level.all, except: %i[created_at updated_at]
+    render json: Level.all, include: { tiles: { only: %i[x y] } }, except: %i[created_at updated_at]
   end
 end
