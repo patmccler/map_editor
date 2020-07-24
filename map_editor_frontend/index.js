@@ -71,12 +71,12 @@ class Level {
     mapRowDiv.classList.add("map-row")
     mapRowDiv.appendChild(this.headerTileTemplate(row))
     for(let col = 0; col < columns; col++) {
-      mapRowDiv.appendChild(this.tileTemplate(col, row))
+      mapRowDiv.appendChild(this.buildTile(col, row))
     }
     return mapRowDiv
   }
 
-  tileTemplate(col, row) {
+  buildTile(col, row) {
     let tileDiv = document.createElement("div")
     tileDiv.classList.add("tile")
     tileDiv.addEventListener("click", e => this.tileClicked(col, row))
@@ -119,11 +119,57 @@ class Tile {
   }
 }
 
+
+/**
+ * There should only be one of this clas
+ * It keeps track of the levels, and the current level
+ * It also loops and checks if rerendering is needed
+ */
+class UIController {
+  constructor(levels, current) {
+    this.levels = levels
+    this.currentLevel = current
+  }
+
+  loop() {
+    if (this.currentLevel && this.currentLevel.renderable) {
+      this.currentLevel.render()
+    }
+    requestAnimationFrame(this.loop.bind(this));
+  }
+
+  initLevels(levels) {
+    this.levels = levels.map(level => {
+      return Object.assign(new Level(), level)
+    })
+    this.populateLevelSelect(levels)
+    this.chooseLevel(levels[0].id)
+  }
+
+  chooseLevel(levelID) {
+    this.currentLevel = this.levels.find(level => level.id === levelID)
+    this.currentLevel.renderable = true
+  }
+
+  populateLevelSelect(levels) {
+    let buildLevelOption = (level) => {
+      let opt = document.createElement("option")
+      opt.value = level.id
+      opt.innerText = level.name
+      return opt
+    }
+
+    let levelSelect = document.querySelector("#levels-select")
+    levels.forEach(level => levelSelect.appendChild(buildLevelOption(level)))
+    levelSelect.addEventListener("change", e => this.chooseLevel(parseInt(e.target.value)))
+  }
+
+}
+
 /** This is where some setup happens
- *
+ *  The UIController is initialized, levels are grabbed
  *
  */
-
 document.addEventListener("DOMContentLoaded", e => {
   const BASE_URL = "http://localhost:3000"
   const LEVELS_URL = `${BASE_URL}/levels`
@@ -133,58 +179,14 @@ document.addEventListener("DOMContentLoaded", e => {
   }
   const UI_CONTROLLER = new UIController()
 
-  let levels;
-  let currentLevel;
-
-  function loop() {
-    if (currentLevel && currentLevel.renderable) {
-      currentLevel.render()
-    }
-    requestAnimationFrame(loop);
-  }
-  requestAnimationFrame(loop);
+  UI_CONTROLLER.loop()
 
   fetchAllLevels()
   function fetchAllLevels() {
     fetch(LEVELS_URL, {HEADERS})
     .then(resp => resp.json())
     .then(allLevels => {
-      levels = allLevels.map(level => {
-        return Object.assign(new Level(), level)
-      })
-      UI_CONTROLLER.levels = levels
-      UI_CONTROLLER.populateLevelSelect(levels)
-      console.log(UI_CONTROLLER)
-      chooseLevel(levels[0].id)
+      UI_CONTROLLER.initLevels(allLevels)
     })
   }
-
-  function chooseLevel(levelID) {
-    currentLevel = levels.find(level => level.id === levelID)
-    currentLevel.renderable = true
-  }
-
-  document.querySelector("#levels-select").addEventListener("change", e => chooseLevel(parseInt(e.target.value)))
 })
-
-class UIController {
-  constructor(levels, current) {
-    this.levels = levels
-    this.currentLevel = current
-  }
-
-  populateLevelSelect(levels) {
-    let levelSelect = document.querySelector("#levels-select")
-    levels.forEach(level => levelSelect.appendChild(this.buildLevelOption(level)))
-  }
-
-  buildLevelOption(level) {
-    let opt = document.createElement("option")
-    opt.value = level.id
-    opt.innerText = level.name
-    return opt
-  }
-
-
-
-}
