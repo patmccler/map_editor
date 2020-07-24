@@ -48,7 +48,8 @@ class Level {
         'Content-Type': 'application/json',
         "Accept": "application/json"
       },
-      method: "POST"
+      method: "POST",
+      body: JSON.stringify(tile)
     }
     fetch(this.tileURL, configObj)
     .then(resp => resp.json())
