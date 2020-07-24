@@ -6,7 +6,8 @@ class Tile < ApplicationRecord
 private
 
   def unique_coord_in_level
-    return unless level.tiles.any? { |tile| tile.x == x && tile.y == y }
+    # binding.pry
+    return unless level.tiles.any? { |tile| tile != self && tile.x == x && tile.y == y }
 
     errors.add(:x, "must be a unique (x,y) coordinate in the level")
   end
