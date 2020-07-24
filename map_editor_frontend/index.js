@@ -57,7 +57,7 @@ class Level {
     }
     fetch(this.tilePostURL, configObj)
     .then(resp => resp.json())
-    .then(newTile => console.log(newTile)
+    .then(newTile => tile.id = newTile.id
     )
   }
 
@@ -76,9 +76,7 @@ class Level {
       method: "DELETE"
     }
     fetch(this.tileDeleteURL(tile.id), configObj)
-    .then(resp => resp.json())
-    .then(newTile => console.log(newTile)
-    )
+    .catch(err => console.log(err))
   }
 
   resetTile(tile) {
