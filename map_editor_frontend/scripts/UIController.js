@@ -68,13 +68,23 @@ export class UIController {
     tools.forEach((tool, i) => {
       let div = document.createElement("div")
       div.classList.add("tool-button")
-      div.innerText = tool.text
+      div.innerHTML = `<div>${tool.text}<div>`
       div.setAttribute("data-tool", tool.text)
       div.addEventListener("click", (e) => this.chooseTool(e.target))
       if(i === 0) this.chooseTool(div)
+
+      if(tool.image_url) {
+        div.appendChild(this.buildToolImg(tool.image_url))
+      }
+
       toolBox.appendChild(div)
     })
+  }
 
+  buildToolImg(image_url) {
+    let img = document.createElement("img")
+    img.src = image_url
+    return img
   }
 
   chooseTool(toolDiv) {
