@@ -27,4 +27,21 @@ export class Tile {
   postURL(levelID) {
     return `http://localhost:3000/levels/${levelID}/tiles`
   }
+
+  deleteURL(levelId) {
+    return `http://localhost:3000/levels/${levelId}/tiles/${this.id}`
+  }
+
+  delete(levelId) {
+    let configObj = {
+      headers: {
+        'Content-Type': 'application/json',
+        "Accept": "application/json"
+      },
+      method: "DELETE"
+    }
+    fetch(this.deleteURL(levelId), configObj)
+    .catch(err => console.log(err))
+  }
+
 }

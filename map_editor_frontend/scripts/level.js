@@ -45,14 +45,6 @@ export class Level {
     delete this.map[y][x]
   }
 
-  // get tilePostURL() {
-  //   return `http://localhost:3000/levels/${this.id}/tiles`
-  // }
-
-  tileDeleteURL(tileID) {
-    return `http://localhost:3000/levels/${this.id}/tiles/${tileID}`
-  }
-
   /**
    * toggle the tile at x,y
    * returns true if added, false if removed
@@ -79,19 +71,7 @@ export class Level {
     this.tiles.splice(this.tiles.indexOf(tile),1)
     this.resetTile(tile)
     this.clearMapAt(tile.x,tile.y)
-    this.deleteTile(tile)
-  }
-
-  deleteTile(tile) {
-    let configObj = {
-      headers: {
-        'Content-Type': 'application/json',
-        "Accept": "application/json"
-      },
-      method: "DELETE"
-    }
-    fetch(this.tileDeleteURL(tile.id), configObj)
-    .catch(err => console.log(err))
+    tile.delete(this.id)
   }
 
   resetTile(tile) {
