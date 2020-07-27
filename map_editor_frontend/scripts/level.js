@@ -1,10 +1,9 @@
-
-console.log("Index.js running")
+import {Tile} from "./tile.js"
 
 /**
  * These are the classes used to represent the data
  */
-class Level {
+export class Level {
   constructor(name, width, height) {
     //Better way to get base URL in here?
     this.name = name
@@ -213,118 +212,3 @@ class Level {
     return mapRowDiv
   }
 }
-
-class Tile {
-  constructor(x,y) {
-    this.x = x
-    this.y = y
-  }
-
-  static findTile(tiles,x,y) {
-    // probably a faster way to do this, may need to look into later
-    return tiles.find(tile => tile.x === x && tile.y === y)
-  }
-}
-
-
-/**
- * There should only be one of this clas
- * It keeps track of the levels, and the current level
- * It also loops and checks if rerendering is needed
- */
-class UIController {
-  static tools = ["Toggle", "Door", "Entrance"]
-
-  constructor(levels, current) {
-    this.levels = levels
-    this.currentLevel = current
-    this.currentTool
-    this.populateTools()
-  }
-
-  loop() {
-    if (this.currentLevel && this.currentLevel.renderable) {
-      this.currentLevel.render()
-    }
-    requestAnimationFrame(this.loop.bind(this));
-  }
-
-  initLevels(levels) {
-    this.levels = levels.map(level => Level.buildFromJSON(level, this.tileClicked.bind(this)))
-    this.populateLevelSelect(levels)
-    this.chooseLevel(levels[0].id)
-  }
-
-  chooseLevel(levelID) {
-    this.currentLevel = this.levels.find(level => level.id === levelID)
-    this.currentLevel.renderable = true
-    this.currentLevel.firstRender = true
-  }
-
-  tileClicked(col, row) {
-    if(this.currentTool === "Toggle") {
-      this.currentLevel.renderable = true
-      this.currentLevel.toggleTile(col,row)
-    }
-  }
-
-  populateLevelSelect(levels) {
-    let buildLevelOption = (level) => {
-      let opt = document.createElement("option")
-      opt.value = level.id
-      opt.innerText = level.name
-      return opt
-    }
-
-    let levelSelect = document.querySelector("#levels-select")
-    levels.forEach(level => levelSelect.appendChild(buildLevelOption(level)))
-    levelSelect.addEventListener("change", e => this.chooseLevel(parseInt(e.target.value)))
-  }
-
-  populateTools() {
-    let tools = this.constructor.tools
-    let toolBox = document.getElementById("tool-box")
-
-    tools.forEach((text, i) => {
-      let div = document.createElement("div")
-      div.classList.add("tool-button")
-      div.innerText = text
-      div.setAttribute("data-tool", text)
-      div.addEventListener("click", (e) => this.chooseTool(e.target))
-      if(i === 0) this.chooseTool(div)
-      toolBox.appendChild(div)
-    })
-
-  }
-
-  chooseTool(toolDiv) {
-    if(!toolDiv.classList.contains("selected")) {
-      if(this.currentTool) document.querySelector(".tool-button.selected").classList.remove("selected")
-      toolDiv.classList.add("selected")
-      this.currentTool = toolDiv.getAttribute("data-tool")
-    }
-  }
-}
-
-/** This is where some setup happens
- *  The UIController is initialized, levels are grabbed
- *
- */
-document.addEventListener("DOMContentLoaded", e => {
-  const BASE_URL = "http://localhost:3000"
-  const LEVELS_URL = `${BASE_URL}/levels`
-  const HEADERS = {
-    'Content-Type': 'application/json',
-    "Accept": "application/json"
-  }
-  const UI_CONTROLLER = new UIController()
-
-  UI_CONTROLLER.loop()
-
-  fetchAllLevels()
-  function fetchAllLevels() {
-    fetch(LEVELS_URL, {HEADERS})
-    .then(resp => resp.json())
-    .then(allLevels => UI_CONTROLLER.initLevels(allLevels))
-  }
-})
