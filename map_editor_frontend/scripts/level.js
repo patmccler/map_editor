@@ -45,9 +45,9 @@ export class Level {
     delete this.map[y][x]
   }
 
-  get tilePostURL() {
-    return `http://localhost:3000/levels/${this.id}/tiles`
-  }
+  // get tilePostURL() {
+  //   return `http://localhost:3000/levels/${this.id}/tiles`
+  // }
 
   tileDeleteURL(tileID) {
     return `http://localhost:3000/levels/${this.id}/tiles/${tileID}`
@@ -72,23 +72,7 @@ export class Level {
     let tile = new Tile(x,y)
     this.tiles.push(tile)
     this.setMapAt(x,y, tile)
-    this.postTile(tile)
-  }
-
-  //Make a fetcher class maybe, to hold urls?
-  postTile(tile) {
-    let configObj = {
-      headers: {
-        'Content-Type': 'application/json',
-        "Accept": "application/json"
-      },
-      method: "POST",
-      body: JSON.stringify(tile)
-    }
-    fetch(this.tilePostURL, configObj)
-    .then(resp => resp.json())
-    .then(newTile => tile.id = newTile.id
-    )
+    tile.persist(this.id)
   }
 
   removeTile(tile) {
