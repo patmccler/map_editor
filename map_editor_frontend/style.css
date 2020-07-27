@@ -58,6 +58,34 @@ footer {
   border: rgb(75, 66, 70) solid 5px;
 }
 
+.tile.no-top {
+  border-top: none;
+  padding-bottom: calc(100% - 5px);
+}
+
+.tile.no-right {
+  width: calc(100% - 5px);
+  border-right: none;
+}
+
+.tile.no-bottom {
+  border-bottom: none;
+  padding-bottom: calc(100% - 5px);
+}
+
+.tile.no-left {
+  width: calc(100% - 5px);
+  border-left: none;
+}
+
+.tile.no-left.no-right {
+  width: 100%;
+}
+
+.tile.no-top.no-bottom {
+  padding-bottom: 100%;
+}
+
 .tile.map-header {
   border: none;
   padding-bottom: 75%;

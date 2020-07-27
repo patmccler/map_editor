@@ -137,7 +137,16 @@ class Level {
     this.tiles.forEach(tile => {
       let tileDiv = this.findTileDiv(tile)
       tileDiv.classList.add("basic-tile")
-      console.log(this.findNeighborTiles(tile))
+      let neighbors = this.findNeighborTiles(tile)
+
+      for(let key in neighbors) {
+        if (neighbors[key]) {
+          tileDiv.classList.add(`no-${key}`)
+        }
+        else {
+          tileDiv.classList.remove(`no-${key}`)
+        }
+      }
     })
   }
 
