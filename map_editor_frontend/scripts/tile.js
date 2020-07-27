@@ -1,7 +1,8 @@
 export class Tile {
-  constructor(x,y) {
+  constructor(x, y, levelId) {
     this.x = x
     this.y = y
+    this.levelId = levelId
   }
 
   static findTile(tiles,x,y) {
@@ -9,7 +10,15 @@ export class Tile {
     return tiles.find(tile => tile.x === x && tile.y === y)
   }
 
-  persist(levelId) {
+  get postURL() {
+    return `http://localhost:3000/levels/${this.levelId}/tiles`
+  }
+
+  get deleteURL() {
+    return `http://localhost:3000/levels/${this.levelId}/tiles/${this.id}`
+  }
+
+  persist() {
     let configObj = {
       headers: {
         'Content-Type': 'application/json',
@@ -18,21 +27,13 @@ export class Tile {
       method: "POST",
       body: JSON.stringify(this)
     }
-    fetch(this.postURL(levelId), configObj)
+    fetch(this.postURL, configObj)
     .then(resp => resp.json())
     .then(newTile => this.id = newTile.id
     )
   }
 
-  postURL(levelID) {
-    return `http://localhost:3000/levels/${levelID}/tiles`
-  }
-
-  deleteURL(levelId) {
-    return `http://localhost:3000/levels/${levelId}/tiles/${this.id}`
-  }
-
-  delete(levelId) {
+  delete() {
     let configObj = {
       headers: {
         'Content-Type': 'application/json',
@@ -40,7 +41,7 @@ export class Tile {
       },
       method: "DELETE"
     }
-    fetch(this.deleteURL(levelId), configObj)
+    fetch(this.deleteURL, configObj)
     .catch(err => console.log(err))
   }
 

@@ -61,17 +61,17 @@ export class Level {
   }
 
   addTile(x,y) {
-    let tile = new Tile(x,y)
+    let tile = new Tile(x,y, this.id)
     this.tiles.push(tile)
     this.setMapAt(x,y, tile)
-    tile.persist(this.id)
+    tile.persist()
   }
 
   removeTile(tile) {
     this.tiles.splice(this.tiles.indexOf(tile),1)
     this.resetTile(tile)
     this.clearMapAt(tile.x,tile.y)
-    tile.delete(this.id)
+    tile.delete()
   }
 
   resetTile(tile) {
