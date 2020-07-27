@@ -5,6 +5,6 @@ class LevelsController < ApplicationController
   end
 
   def index
-    render json: Level.all, include: { tiles: { only: %i[x y id] } }, except: %i[created_at updated_at]
+    render json: Level.all, include: { tiles: { except: %i[created_at updated_at] } }, except: %i[created_at updated_at]
   end
 end
