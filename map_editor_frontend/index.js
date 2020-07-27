@@ -38,7 +38,7 @@ class Level {
   }
 
   getMapAt(x,y) {
-    return this.map[y][x]
+    return this.map[y] ? this.map[y][x] : null
   }
 
   clearMapAt(x,y) {
@@ -135,12 +135,20 @@ class Level {
 
   renderTiles() {
     this.tiles.forEach(tile => {
-      this.findTileDiv(tile).classList.add("basic-tile")
+      let tileDiv = this.findTileDiv(tile)
+      tileDiv.classList.add("basic-tile")
+      console.log(this.findNeighborTiles(tile))
     })
   }
 
-  findNeighborTiles(tile) {
 
+
+  findNeighborTiles(tile) {
+    let top = this.getMapAt(tile.x, tile.y - 1)
+    let right = this.getMapAt(tile.x + 1, tile.y)
+    let bottom = this.getMapAt(tile.x, tile.y + 1)
+    let left = this.getMapAt(tile.x - 1, tile.y)
+    return { top, right, bottom, left }
   }
 
   findTileDiv(tile) {
