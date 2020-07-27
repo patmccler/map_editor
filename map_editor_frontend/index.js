@@ -17,8 +17,9 @@ class Level {
     this.map = []
   }
 
-  static buildFromJSON(levelJSON) {
+  static buildFromJSON(levelJSON, tileClickedCallback) {
     let newLevel = Object.assign(new Level(), levelJSON)
+    newLevel.tileClicked = tileClickedCallback
     newLevel.processTiles()
     return newLevel
   }
@@ -193,11 +194,6 @@ class Level {
     return tileDiv
   }
 
-  tileClicked(col, row) {
-    this.renderable = true
-    return this.toggleTile(col,row)
-  }
-
   headerTileTemplate(index) {
     let div = document.createElement("div")
     div.innerText = index + 1
@@ -254,7 +250,7 @@ class UIController {
   }
 
   initLevels(levels) {
-    this.levels = levels.map(level => Level.buildFromJSON(level))
+    this.levels = levels.map(level => Level.buildFromJSON(level, this.tileClicked.bind(this)))
     this.populateLevelSelect(levels)
     this.chooseLevel(levels[0].id)
   }
@@ -263,6 +259,13 @@ class UIController {
     this.currentLevel = this.levels.find(level => level.id === levelID)
     this.currentLevel.renderable = true
     this.currentLevel.firstRender = true
+  }
+
+  tileClicked(col, row) {
+    if(this.currentTool === "Toggle") {
+      this.currentLevel.renderable = true
+      this.currentLevel.toggleTile(col,row)
+    }
   }
 
   populateLevelSelect(levels) {
@@ -301,7 +304,6 @@ class UIController {
       this.currentTool = toolDiv.getAttribute("data-tool")
     }
   }
-
 }
 
 /** This is where some setup happens
