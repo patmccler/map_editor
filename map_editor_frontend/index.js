@@ -237,9 +237,13 @@ class Tile {
  * It also loops and checks if rerendering is needed
  */
 class UIController {
+  static tools = ["Toggle", "Door", "Entrance"]
+
   constructor(levels, current) {
     this.levels = levels
     this.currentLevel = current
+    this.currentTool
+    this.populateTools()
   }
 
   loop() {
@@ -272,6 +276,30 @@ class UIController {
     let levelSelect = document.querySelector("#levels-select")
     levels.forEach(level => levelSelect.appendChild(buildLevelOption(level)))
     levelSelect.addEventListener("change", e => this.chooseLevel(parseInt(e.target.value)))
+  }
+
+  populateTools() {
+    let tools = this.constructor.tools
+    let toolBox = document.getElementById("tool-box")
+
+    tools.forEach((text, i) => {
+      let div = document.createElement("div")
+      div.classList.add("tool-button")
+      div.innerText = text
+      div.setAttribute("data-tool", text)
+      div.addEventListener("click", (e) => this.chooseTool(e.target))
+      if(i === 0) this.chooseTool(div)
+      toolBox.appendChild(div)
+    })
+
+  }
+
+  chooseTool(toolDiv) {
+    if(!toolDiv.classList.contains("selected")) {
+      if(this.currentTool) document.querySelector(".tool-button.selected").classList.remove("selected")
+      toolDiv.classList.add("selected")
+      this.currentTool = toolDiv.getAttribute("data-tool")
+    }
   }
 
 }
