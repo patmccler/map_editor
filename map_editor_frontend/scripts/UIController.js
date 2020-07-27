@@ -6,7 +6,14 @@ import {Level} from "./level.js"
  * It also loops and checks if rerendering is needed
  */
 export class UIController {
-  static tools = ["Toggle", "Door", "Entrance"]
+  static tools = [
+    {text: "Toggle"},
+    {
+      text: "Door",
+      image_url: "../assets/door_closed.png"
+    },
+    {text: "Entrance"}
+  ]
 
   constructor(levels, current) {
     this.levels = levels
@@ -35,7 +42,7 @@ export class UIController {
   }
 
   tileClicked(col, row) {
-    if(this.currentTool === "Toggle") {
+    if(this.currentTool.text === "Toggle") {
       this.currentLevel.renderable = true
       this.currentLevel.toggleTile(col,row)
     }
@@ -58,11 +65,11 @@ export class UIController {
     let tools = this.constructor.tools
     let toolBox = document.getElementById("tool-box")
 
-    tools.forEach((text, i) => {
+    tools.forEach((tool, i) => {
       let div = document.createElement("div")
       div.classList.add("tool-button")
-      div.innerText = text
-      div.setAttribute("data-tool", text)
+      div.innerText = tool.text
+      div.setAttribute("data-tool", tool.text)
       div.addEventListener("click", (e) => this.chooseTool(e.target))
       if(i === 0) this.chooseTool(div)
       toolBox.appendChild(div)
@@ -74,7 +81,7 @@ export class UIController {
     if(!toolDiv.classList.contains("selected")) {
       if(this.currentTool) document.querySelector(".tool-button.selected").classList.remove("selected")
       toolDiv.classList.add("selected")
-      this.currentTool = toolDiv.getAttribute("data-tool")
+      this.currentTool = this.constructor.tools.find(tool => tool.text === toolDiv.getAttribute("data-tool"))
     }
   }
 }
