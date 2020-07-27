@@ -100,21 +100,10 @@ export class Level {
   renderTiles() {
     this.tiles.forEach(tile => {
       let tileDiv = this.findTileDiv(tile)
-      tileDiv.classList.add("basic-tile")
       let neighbors = this.findNeighborTiles(tile)
-
-      for(let key in neighbors) {
-        if (neighbors[key]) {
-          tileDiv.classList.add(`no-${key}`)
-        }
-        else {
-          tileDiv.classList.remove(`no-${key}`)
-        }
-      }
+      tile.render(tileDiv, neighbors)
     })
   }
-
-
 
   findNeighborTiles(tile) {
     let top = this.getMapAt(tile.x, tile.y - 1)
@@ -150,6 +139,7 @@ export class Level {
     return mapRowDiv
   }
 
+  // Builds the empty space a tile could be
   buildTile(col, row) {
     let tileDiv = document.createElement("div")
     tileDiv.classList.add("tile")

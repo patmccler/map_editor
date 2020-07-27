@@ -1,8 +1,8 @@
 export class Tile {
-  constructor(x, y, levelId) {
+  constructor(x, y, level_id) {
     this.x = x
     this.y = y
-    this.levelId = levelId
+    this.level_id = level_id
   }
 
   static findTile(tiles,x,y) {
@@ -43,6 +43,22 @@ export class Tile {
     }
     fetch(this.deleteURL, configObj)
     .catch(err => console.log(err))
+  }
+
+  // make determinations about how to display a given tile
+  //based on itself and its neighboring tiles
+  // neighbors has key for top, right, left, and bot tiles
+  render(targetDiv, neighbors) {
+    targetDiv.classList.add("basic-tile")
+
+    for(let key in neighbors) {
+      if (neighbors[key]) {
+        targetDiv.classList.add(`no-${key}`)
+      }
+      else {
+        targetDiv.classList.remove(`no-${key}`)
+      }
+    }
   }
 
 }
