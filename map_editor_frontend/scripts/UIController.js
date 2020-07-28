@@ -12,7 +12,10 @@ export class UIController {
       text: "Door",
       imageURL: "../assets/door_closed.png"
     },
-    {text: "Entrance"}
+    {
+      text: "Stairs",
+      imageURL: "../assets/stair_down.png"
+    }
   ]
 
   constructor(levels, current) {
@@ -46,7 +49,7 @@ export class UIController {
       this.currentLevel.renderable = true
       this.currentLevel.toggleTile(col,row)
     }
-    if(this.currentTool.text === "Door") {
+    if(this.currentTool.imageURL) {
       this.currentLevel.renderable = true
       let tile = this.currentLevel.getMapAt(col,row)
 
