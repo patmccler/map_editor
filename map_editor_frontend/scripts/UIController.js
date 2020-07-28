@@ -94,7 +94,8 @@ export class UIController {
       } else if(!!this.currentLevel.getMapAt(neighbor.x, neighbor.y) && !add && neighbor.div){
         let removeOnMouseEnter = mouseEnterListener(this.currentLevel.removeTileAtLocation, this.currentLevel)
         setListener(removeOnMouseEnter)
-      } else {
+      // pass an empty callback to bubble to further neighbors without affecting intermediate elements
+      } else if(neighbor.div) {
         let bubblePastExistingOnEnter = mouseEnterListener(() => {}, null)
         setListener(bubblePastExistingOnEnter)
       }

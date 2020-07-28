@@ -145,7 +145,7 @@ export class Level {
   }
 
   findDivByLocation(x,y) {
-    let row = document.getElementsByClassName("map-row")[y + 1]
+    let row = y >= 0 ? document.getElementsByClassName("map-row")[y + 1] : null
     return row ? row.children[x + 1] : null
   }
 
