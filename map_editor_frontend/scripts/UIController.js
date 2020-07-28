@@ -127,7 +127,7 @@ export class UIController {
       div.classList.add("tool-button")
       div.innerHTML = `<div>${tool.text}<div>`
       div.setAttribute("data-tool", tool.text)
-      div.addEventListener("click", (e) => this.chooseTool(e.target))
+      div.addEventListener("click", (e) => this.chooseTool(e.currentTarget))
       if(i === 0) this.chooseTool(div)
 
       if(tool.imageURL) {
