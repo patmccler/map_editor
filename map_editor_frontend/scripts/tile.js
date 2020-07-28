@@ -3,6 +3,7 @@ export class Tile {
     this.x = x
     this.y = y
     this.level_id = level_id
+    // this.image_url = image_url
   }
 
   static findTile(tiles,x,y) {
@@ -11,7 +12,7 @@ export class Tile {
   }
 
   get postURL() {
-    return `http://localhost:3000/levels/${this.levelId}/tiles`
+    return `http://localhost:3000/levels/${this.level_id}/tiles`
   }
 
   get deleteURL() {
@@ -19,6 +20,7 @@ export class Tile {
   }
 
   persist() {
+    console.log(this)
     let configObj = {
       headers: {
         'Content-Type': 'application/json',
