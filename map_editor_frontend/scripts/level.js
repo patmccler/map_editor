@@ -68,10 +68,15 @@ export class Level {
   }
 
   removeTile(tile) {
+    console.log(tile)
     this.tiles.splice(this.tiles.indexOf(tile),1)
     this.resetTile(tile)
     this.clearMapAt(tile.x,tile.y)
     tile.delete()
+  }
+
+  removeTileAtLocation(x,y) {
+    this.removeTile(Tile.findTile(this.tiles, x,y))
   }
 
   resetTile(tile) {
@@ -122,8 +127,8 @@ export class Level {
     }
     let right = {
       div: this.findDivByLocation(col + 1, row),
-      x: col + 1, y: row }
-
+      x: col + 1, y: row
+    }
     let bottom = {
       div: this.findDivByLocation(col, row + 1),
       x: col, y: row + 1
@@ -141,7 +146,8 @@ export class Level {
   }
 
   findDivByLocation(x,y) {
-    return document.getElementsByClassName("map-row")[y + 1].children[x + 1]
+    let row = document.getElementsByClassName("map-row")[y + 1]
+    return row ? row.children[x + 1] : null
   }
 
   renderLevelName() {

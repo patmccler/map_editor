@@ -47,15 +47,11 @@ export class UIController {
   tileClicked(col, row) {
     if(this.currentTool.text === "Toggle") {
       this.currentLevel.renderable = true
-      this.currentLevel.toggleTile(col,row)
+      let add = this.currentLevel.toggleTile(col,row)
 
-      let neighbors = this.currentLevel.findNeighborTileDivWithLocation(col, row)
-      for(let neighbor of Object.values(neighbors)) {
-        console.log(neighbor)
-      }
+      this.neighborsRespondToDrag(col, row, add)
 
-    }
-    if(this.currentTool.imageURL) {
+    } else if (this.currentTool.imageURL) {
       this.currentLevel.renderable = true
       let tile = this.currentLevel.getMapAt(col,row)
 
@@ -66,6 +62,36 @@ export class UIController {
         tile.rotate()
       } else {
         this.currentLevel.addTile(col, row, this.currentTool.imageURL)
+      }
+    }
+  }
+
+  neighborsRespondToDrag(col, row, add) {
+    let neighbors = this.currentLevel.findNeighborTileDivWithLocation(col, row)
+    for(let neighbor of Object.values(neighbors)) {
+
+      let mouseEnterListener = (callback, thisArg) => {
+        return e => {
+          callback.call(thisArg, neighbor.x, neighbor.y)
+          this.neighborsRespondToDrag(neighbor.x, neighbor.y, add)
+          this.currentLevel.renderable = true
+        }
+      }
+
+      let setListener = callback => {
+        neighbor.div.addEventListener("mouseenter", callback, { once: true })
+        document.addEventListener("mouseup", e => neighbor.div.removeEventListener("mouseenter", callback), { once: true })
+      }
+
+      // if neighbor tile is empty, and we are adding
+      if(!this.currentLevel.getMapAt(neighbor.x, neighbor.y) && add && neighbor.div) {
+        let addOnMouseEnter = mouseEnterListener(this.currentLevel.addTile, this.currentLevel)
+        setListener(addOnMouseEnter)
+
+      // if neighbor tile is not empty, and we are removing
+      } else if(!!this.currentLevel.getMapAt(neighbor.x, neighbor.y) && !add){
+        let removeOnMouseEnter = mouseEnterListener(this.currentLevel.removeTileAtLocation, this.currentLevel)
+        setListener(removeOnMouseEnter)
       }
     }
   }
