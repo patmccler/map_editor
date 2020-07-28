@@ -10,7 +10,7 @@ export class UIController {
     {text: "Toggle"},
     {
       text: "Door",
-      image_url: "../assets/door_closed.png"
+      imageURL: "../assets/door_closed.png"
     },
     {text: "Entrance"}
   ]
@@ -48,7 +48,12 @@ export class UIController {
     }
     if(this.currentTool.text === "Door") {
       this.currentLevel.renderable = true
-      this.currentLevel.addTile.call(this.currentLevel, col, row, this.currentTool.image_url)
+      let tile = this.currentLevel.getMapAt(col,row)
+      if(tile) {
+        tile.imageURL = this.currentTool.imageURL
+      } else {
+        this.currentLevel.addTile.call(this.currentLevel, col, row, this.currentTool.imageURL)
+      }
     }
   }
 
@@ -77,18 +82,18 @@ export class UIController {
       div.addEventListener("click", (e) => this.chooseTool(e.target))
       if(i === 0) this.chooseTool(div)
 
-      if(tool.image_url) {
-        div.appendChild(this.buildToolImg(tool.image_url))
+      if(tool.imageURL) {
+        div.appendChild(this.buildToolImg(tool.imageURL))
       }
 
       toolBox.appendChild(div)
     })
   }
 
-  buildToolImg(image_url) {
+  buildToolImg(imageURL) {
     let img = document.createElement("img")
     img.className = "tool-image"
-    img.src = image_url
+    img.src = imageURL
     return img
   }
 

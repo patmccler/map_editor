@@ -1,9 +1,9 @@
 export class Tile {
-  constructor(x, y, level_id, image_url) {
+  constructor(x, y, level_id, imageURL) {
     this.x = x
     this.y = y
     this.level_id = level_id
-    this.image_url = image_url
+    this.image_url = imageURL
   }
 
   static findTile(tiles,x,y) {
@@ -11,11 +11,20 @@ export class Tile {
     return tiles.find(tile => tile.x === x && tile.y === y)
   }
 
+  set imageURL(imageURL) {
+    this.image_url = imageURL
+    this.persist()
+  }
+
+  get imageURL() {
+    return this.image_url
+  }
+
   get postURL() {
     return `http://localhost:3000/levels/${this.level_id}/tiles`
   }
 
-  get deleteURL() {
+  get resourceURL() {
     return `http://localhost:3000/levels/${this.levelId}/tiles/${this.id}`
   }
 
@@ -34,6 +43,21 @@ export class Tile {
     )
   }
 
+  save() {
+    let configObj = {
+      headers: {
+        'Content-Type': 'application/json',
+        "Accept": "application/json"
+      },
+      method: "PATCH",
+      body: JSON.stringify(this)
+    }
+    fetch(this.resourceURL, configObj)
+    .then(resp => resp.json())
+    .then(newTile => this.id = newTile.id
+    )
+  }
+
   delete() {
     let configObj = {
       headers: {
@@ -42,7 +66,7 @@ export class Tile {
       },
       method: "DELETE"
     }
-    fetch(this.deleteURL, configObj)
+    fetch(this.resourceURL, configObj)
     .catch(err => console.log(err))
   }
 
@@ -53,8 +77,8 @@ export class Tile {
 
     targetDiv.classList.add("basic-tile")
 
-    if(this.image_url) {
-      targetDiv.style.backgroundImage = `url('${this.image_url}')`
+    if(this.imageURL) {
+      targetDiv.style.backgroundImage = `url('${this.imageURL}')`
       targetDiv.classList.add("tile-image")
     } else {
       targetDiv.style.backgroundImage = ""
