@@ -1,5 +1,6 @@
 export class Tile {
   constructor(x, y, level_id, imageURL) {
+    this.rotation = 0
     this.x = x
     this.y = y
     this.level_id = level_id
@@ -32,6 +33,12 @@ export class Tile {
     return `http://localhost:3000/levels/${this.level_id}/tiles/${this.id}`
   }
 
+  rotate() {
+    this.rotation = (this.rotation + 90) % 360
+    console.log(this.rotation)
+    this.save()
+  }
+
   persist() {
     let configObj = {
       headers: {
@@ -48,18 +55,22 @@ export class Tile {
   }
 
   save() {
-    let configObj = {
-      headers: {
-        'Content-Type': 'application/json',
-        "Accept": "application/json"
-      },
-      method: "PATCH",
-      body: JSON.stringify(this)
+    if(this.id) {
+      let configObj = {
+        headers: {
+          'Content-Type': 'application/json',
+          "Accept": "application/json"
+        },
+        method: "PATCH",
+        body: JSON.stringify(this)
+      }
+      fetch(this.resourceURL, configObj)
+      .then(resp => resp.json())
+      .then(updatedTile => Object.assign(this, updatedTile)
+      )
+    } else {
+      this.persist()
     }
-    fetch(this.resourceURL, configObj)
-    .then(resp => resp.json())
-    .then(newTile => this.id = newTile.id
-    )
   }
 
   delete() {
@@ -78,12 +89,15 @@ export class Tile {
   //based on itself and its neighboring tiles
   // neighbors has key for top, right, left, and bot tiles
   render(targetDiv, neighbors) {
-
-    targetDiv.classList.add("basic-tile")
+    targetDiv.className = "tile basic-tile"
 
     if(this.imageURL) {
-      targetDiv.style.backgroundImage = `url('${this.imageURL}')`
-      targetDiv.classList.add("tile-image")
+      let img = targetDiv.firstChild || document.createElement("div")
+      img.className = ""
+      img.style.backgroundImage = `url('${this.imageURL}')`
+      img.classList.add("tile-image")
+      img.classList.add(`rotate-${this.rotation}`)
+      targetDiv.appendChild(img)
     } else {
       targetDiv.style.backgroundImage = ""
     }

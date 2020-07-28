@@ -49,8 +49,11 @@ export class UIController {
     if(this.currentTool.text === "Door") {
       this.currentLevel.renderable = true
       let tile = this.currentLevel.getMapAt(col,row)
-      if(tile) {
+
+      if(tile && tile.imageURL !== this.currentTool.imageURL) {
         tile.imageURL = this.currentTool.imageURL
+      } else if(tile) {
+        tile.rotate()
       } else {
         this.currentLevel.addTile.call(this.currentLevel, col, row, this.currentTool.imageURL)
       }

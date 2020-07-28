@@ -46,6 +46,7 @@ footer {
 }
 
 .tile {
+  position: relative;
   width: calc(100% - 4px);
   height: 0px;
   padding-bottom: calc(100% - 4px);
@@ -93,8 +94,32 @@ footer {
 }
 
 .tile-image {
+  width: 100%;
+  height: 0;
+  padding-bottom: 100%;
+  position: absolute;
+  bottom: 0px;
   background-repeat: no-repeat;
-  background-size: 100% 100%;
+  background-size: cover;
+}
+
+.rotate-90 {
+  transform: rotate(90deg)
+}
+
+.no-left .rotate-90, .no-right .rotate-90, .no-left .rotate-270, .no-right .rotate-270 {
+  bottom: -5px;
+}
+
+
+
+.rotate-180 {
+  transform: rotate(180deg)
+}
+
+.rotate-270 {
+  bottom: -5px;
+  transform: rotate(270deg)
 }
 
 .map-top-header .map-header {

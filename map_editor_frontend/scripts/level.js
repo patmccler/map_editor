@@ -77,7 +77,7 @@ export class Level {
   resetTile(tile) {
     let div = this.findTileDiv(tile)
     div.className = "tile"
-    div.style.backgroundImage = ""
+    div.innerHTML = ""
   }
 
   render() {
