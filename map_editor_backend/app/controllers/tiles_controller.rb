@@ -13,7 +13,7 @@ class TilesController < ApplicationController
   def update
     tile = Tile.find(params[:id])
     if tile.update(tile_params)
-      render json: tile, except: %i[:created_at updated_at]
+      render json: tile, except: %i[created_at updated_at]
     else
       render json: { error: "Couldn't update tile with id #{params[:id]}" }
     end
