@@ -94,6 +94,9 @@ export class UIController {
       } else if(!!this.currentLevel.getMapAt(neighbor.x, neighbor.y) && !add && neighbor.div){
         let removeOnMouseEnter = mouseEnterListener(this.currentLevel.removeTileAtLocation, this.currentLevel)
         setListener(removeOnMouseEnter)
+      } else {
+        let bubblePastExistingOnEnter = mouseEnterListener(() => {}, null)
+        setListener(bubblePastExistingOnEnter)
       }
     }
   }
