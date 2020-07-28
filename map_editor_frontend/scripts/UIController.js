@@ -72,9 +72,12 @@ export class UIController {
 
       let mouseEnterListener = (callback, thisArg) => {
         return e => {
-          callback.call(thisArg, neighbor.x, neighbor.y)
+          if(thisArg) {
+            // only rerender if were actually doing something with callback
+            this.currentLevel.renderable = true
+            callback.call(thisArg, neighbor.x, neighbor.y)
+          }
           this.neighborsRespondToDrag(neighbor.x, neighbor.y, add)
-          this.currentLevel.renderable = true
           e.target.onmouseenter = null
         }
       }
