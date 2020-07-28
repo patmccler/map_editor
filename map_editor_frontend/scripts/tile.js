@@ -93,13 +93,10 @@ export class Tile {
 
     if(this.imageURL) {
       let img = targetDiv.firstChild || document.createElement("div")
-      img.className = ""
+      img.className = "tile-image"
       img.style.backgroundImage = `url('${this.imageURL}')`
-      img.classList.add("tile-image")
       img.classList.add(`rotate-${this.rotation}`)
       targetDiv.appendChild(img)
-    } else {
-      targetDiv.style.backgroundImage = ""
     }
 
     for(let key in neighbors) {
