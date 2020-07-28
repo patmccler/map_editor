@@ -46,6 +46,10 @@ export class UIController {
       this.currentLevel.renderable = true
       this.currentLevel.toggleTile(col,row)
     }
+    if(this.currentTool.text === "Door") {
+      this.currentLevel.renderable = true
+      this.currentLevel.addTile.call(this.currentLevel, col, row, this.currentTool.image_url)
+    }
   }
 
   populateLevelSelect(levels) {
@@ -83,6 +87,7 @@ export class UIController {
 
   buildToolImg(image_url) {
     let img = document.createElement("img")
+    img.className = "tool-image"
     img.src = image_url
     return img
   }

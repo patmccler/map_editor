@@ -1,9 +1,9 @@
 export class Tile {
-  constructor(x, y, level_id) {
+  constructor(x, y, level_id, image_url) {
     this.x = x
     this.y = y
     this.level_id = level_id
-    // this.image_url = image_url
+    this.image_url = image_url
   }
 
   static findTile(tiles,x,y) {
@@ -20,7 +20,6 @@ export class Tile {
   }
 
   persist() {
-    console.log(this)
     let configObj = {
       headers: {
         'Content-Type': 'application/json',

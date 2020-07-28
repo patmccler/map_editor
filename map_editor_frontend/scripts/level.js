@@ -60,8 +60,8 @@ export class Level {
     }
   }
 
-  addTile(x,y) {
-    let tile = new Tile(x,y, this.id)
+  addTile(x,y, image_url) {
+    let tile = new Tile(x,y, this.id, image_url)
     this.tiles.push(tile)
     this.setMapAt(x,y, tile)
     tile.persist()
