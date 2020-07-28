@@ -13,7 +13,11 @@ export class Tile {
 
   set imageURL(imageURL) {
     this.image_url = imageURL
-    this.persist()
+    if(this.id) {
+      this.save()
+    } else {
+      this.persist()
+    }
   }
 
   get imageURL() {
@@ -25,7 +29,7 @@ export class Tile {
   }
 
   get resourceURL() {
-    return `http://localhost:3000/levels/${this.levelId}/tiles/${this.id}`
+    return `http://localhost:3000/levels/${this.level_id}/tiles/${this.id}`
   }
 
   persist() {

@@ -4,9 +4,18 @@ class TilesController < ApplicationController
     tile = level.tiles.build(tile_params)
 
     if tile.save
-      render json: tile, only: %i[x y id]
+      render json: tile, except: %i[:created_at updated_at]
     else
       render json: { msg: "Error saving tile for #{level.name} at #{tile.x}, #{tile.y}", errors: tile.errors }
+    end
+  end
+
+  def update
+    tile = Tile.find(params[:id])
+    if tile.update(tile_params)
+      render json: tile, except: %i[:created_at updated_at]
+    else
+      render json: { error: "Couldn't update tile with id #{params[:id]}" }
     end
   end
 
@@ -22,6 +31,6 @@ class TilesController < ApplicationController
 private
 
   def tile_params
-    params.require(:tile).permit(:x, :y, :image_url)
+    params.require(:tile).permit(:x, :y, :image_url, :rotation)
   end
 end
