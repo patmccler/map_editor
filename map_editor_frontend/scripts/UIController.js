@@ -65,7 +65,7 @@ export class UIController {
       } else if(tile) {
         tile.rotate()
       } else {
-        this.currentLevel.addTile.call(this.currentLevel, col, row, this.currentTool.imageURL)
+        this.currentLevel.addTile(col, row, this.currentTool.imageURL)
       }
     }
   }
