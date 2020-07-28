@@ -50,7 +50,15 @@ export class Tile {
   //based on itself and its neighboring tiles
   // neighbors has key for top, right, left, and bot tiles
   render(targetDiv, neighbors) {
+
     targetDiv.classList.add("basic-tile")
+
+    if(this.image_url) {
+      targetDiv.style.backgroundImage = `url('${this.image_url}')`
+      targetDiv.classList.add("tile-image")
+    } else {
+      targetDiv.style.backgroundImage = ""
+    }
 
     for(let key in neighbors) {
       if (neighbors[key]) {
@@ -61,5 +69,4 @@ export class Tile {
       }
     }
   }
-
 }

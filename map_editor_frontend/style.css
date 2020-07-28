@@ -92,6 +92,11 @@ footer {
   text-align: center;
 }
 
+.tile-image {
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
 .map-top-header .map-header {
   grid-row: 1 / 1
 }
