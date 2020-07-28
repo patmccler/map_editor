@@ -60,31 +60,19 @@ footer {
 }
 
 .tile.no-top {
-  border-top: none;
-  padding-bottom: calc(100% - 5px);
+  border-top-color: white;
 }
 
 .tile.no-right {
-  width: calc(100% - 5px);
-  border-right: none;
+  border-right-color: white;
 }
 
 .tile.no-bottom {
-  border-bottom: none;
-  padding-bottom: calc(100% - 5px);
+  border-bottom-color: white;
 }
 
 .tile.no-left {
-  width: calc(100% - 5px);
-  border-left: none;
-}
-
-.tile.no-left.no-right {
-  width: 100%;
-}
-
-.tile.no-top.no-bottom {
-  padding-bottom: 100%;
+  border-left-color: white;
 }
 
 .tile.map-header {
