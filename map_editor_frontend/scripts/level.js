@@ -68,7 +68,6 @@ export class Level {
   }
 
   removeTile(tile) {
-    console.log(tile)
     this.tiles.splice(this.tiles.indexOf(tile),1)
     this.resetTile(tile)
     this.clearMapAt(tile.x,tile.y)

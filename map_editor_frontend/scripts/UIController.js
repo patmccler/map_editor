@@ -75,12 +75,14 @@ export class UIController {
           callback.call(thisArg, neighbor.x, neighbor.y)
           this.neighborsRespondToDrag(neighbor.x, neighbor.y, add)
           this.currentLevel.renderable = true
+          e.target.onmouseenter = null
         }
       }
 
+      //takes a function generated above, asigns it to the current div and sets a listener on doc to destory when mouse is lifted up
       let setListener = callback => {
-        neighbor.div.addEventListener("mouseenter", callback, { once: true })
-        document.addEventListener("mouseup", e => neighbor.div.removeEventListener("mouseenter", callback), { once: true })
+        neighbor.div.onmouseenter = callback
+        document.addEventListener("mouseup", e => neighbor.div.onmouseenter = null, { once: true })
       }
 
       // if neighbor tile is empty, and we are adding
@@ -89,7 +91,7 @@ export class UIController {
         setListener(addOnMouseEnter)
 
       // if neighbor tile is not empty, and we are removing
-      } else if(!!this.currentLevel.getMapAt(neighbor.x, neighbor.y) && !add){
+      } else if(!!this.currentLevel.getMapAt(neighbor.x, neighbor.y) && !add && neighbor.div){
         let removeOnMouseEnter = mouseEnterListener(this.currentLevel.removeTileAtLocation, this.currentLevel)
         setListener(removeOnMouseEnter)
       }

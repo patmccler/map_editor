@@ -35,7 +35,6 @@ export class Tile {
 
   rotate() {
     this.rotation = (this.rotation + 90) % 360
-    console.log(this.rotation)
     this.save()
   }
 
