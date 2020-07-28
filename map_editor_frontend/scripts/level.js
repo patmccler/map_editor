@@ -145,7 +145,7 @@ export class Level {
   buildTile(col, row) {
     let tileDiv = document.createElement("div")
     tileDiv.classList.add("tile")
-    tileDiv.addEventListener("click", e => this.tileClicked(col, row))
+    tileDiv.addEventListener("mousedown", e => this.tileClicked(col, row))
     return tileDiv
   }
 

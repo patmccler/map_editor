@@ -55,6 +55,7 @@ export class UIController {
 
       if(tile && tile.imageURL !== this.currentTool.imageURL) {
         tile.imageURL = this.currentTool.imageURL
+        tile.rotation = 0
       } else if(tile) {
         tile.rotate()
       } else {
