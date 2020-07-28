@@ -130,6 +130,12 @@ footer {
   text-align: center;
 }
 
+.tool-image {
+  width: 50%;
+  pointer-events:none;
+  touch-action:none;
+}
+
 body {
   width: 100vw;
   height: 100vh;
