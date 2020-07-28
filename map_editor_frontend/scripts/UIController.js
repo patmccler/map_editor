@@ -48,6 +48,12 @@ export class UIController {
     if(this.currentTool.text === "Toggle") {
       this.currentLevel.renderable = true
       this.currentLevel.toggleTile(col,row)
+
+      let neighbors = this.currentLevel.findNeighborTileDivWithLocation(col, row)
+      for(let neighbor of Object.values(neighbors)) {
+        console.log(neighbor)
+      }
+
     }
     if(this.currentTool.imageURL) {
       this.currentLevel.renderable = true

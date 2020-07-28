@@ -115,8 +115,33 @@ export class Level {
     return { top, right, bottom, left }
   }
 
+  findNeighborTileDivWithLocation(col, row) {
+    let top = {
+      div: this.findDivByLocation(col, row - 1),
+      x: col, y: row - 1
+    }
+    let right = {
+      div: this.findDivByLocation(col + 1, row),
+      x: col + 1, y: row }
+
+    let bottom = {
+      div: this.findDivByLocation(col, row + 1),
+      x: col, y: row + 1
+    }
+    let left = {
+      div: this.findDivByLocation(col - 1, row),
+      x: (col - 1),
+      y: row
+    }
+    return {top, right, bottom, left}
+  }
+
   findTileDiv(tile) {
     return document.getElementsByClassName("map-row")[tile.y + 1].children[tile.x + 1]
+  }
+
+  findDivByLocation(x,y) {
+    return document.getElementsByClassName("map-row")[y + 1].children[x + 1]
   }
 
   renderLevelName() {
