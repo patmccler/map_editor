@@ -23,6 +23,7 @@ export class UIController {
     this.currentLevel = current
     this.currentTool
     this.populateTools()
+    this.setupActionsMenu()
   }
 
   loop() {
@@ -155,5 +156,13 @@ export class UIController {
       toolDiv.classList.add("selected")
       this.currentTool = this.constructor.tools.find(tool => tool.text === toolDiv.getAttribute("data-tool"))
     }
+  }
+
+  setupActionsMenu() {
+    document.getElementById("new-level").addEventListener("click", this.newLevelForm)
+  }
+
+  newLevelForm() {
+    console.log("New Level??")
   }
 }
