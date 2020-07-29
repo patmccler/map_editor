@@ -159,10 +159,24 @@ export class UIController {
   }
 
   setupActionsMenu() {
+
     document.getElementById("new-level").addEventListener("click", this.newLevelForm)
+
   }
 
   newLevelForm() {
-    console.log("New Level??")
+    let modal = document.getElementById("new-level-modal")
+    modal.style.display = "block";
+
+    document.getElementsByClassName("close")[0].addEventListener("click", e => {
+      modal.style.display = "none";
+    })
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.addEventListener("click", e => {
+      if (e.target == modal) {
+        modal.style.display = "none";
+      }
+    })
   }
 }
