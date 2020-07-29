@@ -95,18 +95,11 @@ footer {
   transform: rotate(90deg)
 }
 
-.no-left .rotate-90, .no-right .rotate-90, .no-left .rotate-270, .no-right .rotate-270 {
-  bottom: -5px;
-}
-
-
-
 .rotate-180 {
   transform: rotate(180deg)
 }
 
 .rotate-270 {
-  bottom: -5px;
   transform: rotate(270deg)
 }
 
