@@ -9,10 +9,16 @@ header {
   padding: 5px;
   display: flex;
   justify-content: space-between;
+  border: 2px solid black;
+  border-radius: 0 0 5px 5px;
+  border-top: none
 }
 
 footer {
   grid-column: 1 / 4;
+  border: 2px solid black;
+  border-radius: 5px 5px 0 0 ;
+  border-bottom: none;
 }
 
 .left-side {
