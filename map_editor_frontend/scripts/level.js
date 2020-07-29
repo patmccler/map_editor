@@ -108,7 +108,6 @@ export class Level {
   }
 
   renderTiles() {
-    console.log(this.dirtyTiles)
     this.dirtyTiles.forEach(tile => {
       let tileDiv = this.findTileDiv(tile)
       let neighbors = this.findNeighborTiles(tile)
@@ -183,6 +182,7 @@ export class Level {
     let tileClicked = e => {
       e.preventDefault()
       let target = this.tileClickedCallback(col, row)
+      this.markDirty(target)
     }
     tileDiv.classList.add("tile")
     tileDiv.addEventListener("mousedown", tileClicked )
@@ -193,8 +193,8 @@ export class Level {
     if(target instanceof Tile) this.dirtyTiles.add(target)
     let neighbors = this.findNeighborTiles(target)
 
-    for(let aTile in neighbors) {
-      if(neighbors[aTile]) this.dirtyTiles.add(neighbors[aTile])
+    for(let tile in neighbors) {
+      if(neighbors[tile]) this.dirtyTiles.add(neighbors[tile])
     }
   }
 
