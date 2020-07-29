@@ -45,15 +45,17 @@ export class UIController {
   }
 
   tileClicked(col, row) {
+    let tile = this.currentLevel.getMapAt(col,row)
+
     if(this.currentTool.text === "Toggle") {
       this.currentLevel.renderable = true
       let add = this.currentLevel.toggleTile(col,row)
+      tile = this.currentLevel.getMapAt(col,row)
 
       this.neighborsRespondToDrag(col, row, add)
 
     } else if (this.currentTool.imageURL) {
       this.currentLevel.renderable = true
-      let tile = this.currentLevel.getMapAt(col,row)
 
       if(tile && tile.imageURL !== this.currentTool.imageURL) {
         tile.imageURL = this.currentTool.imageURL
@@ -64,6 +66,8 @@ export class UIController {
         this.currentLevel.addTile(col, row, this.currentTool.imageURL)
       }
     }
+
+    return tile || {x: col, y: row}
   }
 
   neighborsRespondToDrag(col, row, add) {

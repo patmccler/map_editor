@@ -11,6 +11,7 @@ export class Level {
     this.height = height
     this.renderable = false
     this.firstRender = true
+    this.dirtyTiles = new Set()
 
     this.tiles = []
     this.map = []
@@ -18,7 +19,7 @@ export class Level {
 
   static buildFromJSON(levelJSON, tileClickedCallback) {
     let newLevel = Object.assign(new Level(), levelJSON)
-    newLevel.tileClicked = tileClickedCallback
+    newLevel.tileClickedCallback = tileClickedCallback
     newLevel.processTiles()
     return newLevel
   }
@@ -63,6 +64,7 @@ export class Level {
   addTile(x,y, image_url) {
     let tile = new Tile(x,y, this.id, image_url)
     this.tiles.push(tile)
+    this.markDirty(tile)
     this.setMapAt(x,y, tile)
     tile.persist()
   }
@@ -71,6 +73,7 @@ export class Level {
     this.tiles.splice(this.tiles.indexOf(tile),1)
     this.resetTile(tile)
     this.clearMapAt(tile.x,tile.y)
+    this.markDirty({x: tile.x, y: tile.y})
     tile.delete()
   }
 
@@ -97,6 +100,7 @@ export class Level {
       this.renderLevelName()
       this.renderLevelWidth()
       this.renderLevelHeight()
+      this.dirtyTiles = new Set(this.tiles)
       this.firstRender = false
     }
     this.renderTiles()
@@ -104,11 +108,13 @@ export class Level {
   }
 
   renderTiles() {
-    this.tiles.forEach(tile => {
+    console.log(this.dirtyTiles)
+    this.dirtyTiles.forEach(tile => {
       let tileDiv = this.findTileDiv(tile)
       let neighbors = this.findNeighborTiles(tile)
       tile.render(tileDiv, neighbors)
     })
+    this.dirtyTiles = new Set()
   }
 
   findNeighborTiles(tile) {
@@ -146,7 +152,7 @@ export class Level {
 
   findDivByLocation(x,y) {
     let row = y >= 0 ? document.getElementsByClassName("map-row")[y + 1] : null
-    return row ? row.children[x + 1] : null
+    return (row && x >= 0) ? row.children[x + 1] : null
   }
 
   renderLevelName() {
@@ -174,9 +180,22 @@ export class Level {
   // Builds the empty space a tile could be
   buildTile(col, row) {
     let tileDiv = document.createElement("div")
+    let tileClicked = e => {
+      e.preventDefault()
+      let target = this.tileClickedCallback(col, row)
+    }
     tileDiv.classList.add("tile")
-    tileDiv.addEventListener("mousedown", e => this.tileClicked(col, row))
+    tileDiv.addEventListener("mousedown", tileClicked )
     return tileDiv
+  }
+
+  markDirty(target) {
+    if(target instanceof Tile) this.dirtyTiles.add(target)
+    let neighbors = this.findNeighborTiles(target)
+
+    for(let aTile in neighbors) {
+      if(neighbors[aTile]) this.dirtyTiles.add(neighbors[aTile])
+    }
   }
 
   headerTileTemplate(index) {
