@@ -5,7 +5,12 @@ class TileTemplatesController < ApplicationController
 
   def create
     tile_template = TileTemplate.new(tile_template_params)
-    binding.pry
+
+    if tile_template.save
+      render json: tile_template
+    else
+      render json: tile_template.errors
+    end
   end
 
 private

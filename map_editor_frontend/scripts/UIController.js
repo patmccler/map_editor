@@ -201,25 +201,24 @@ export class UIController {
   }
 
   newToolSubmit(e) {
-    let name = document.getElementById("tool-name-input").value
-    let image = document.getElementById("tool-image-input").value
-    console.log(name, image)
+
+    let body = new FormData()
+    body.append("tile_template[name]", document.getElementById("tool-name-input").value || "")
+    body.append("tile_template[tile_image]", document.getElementById("tool-image-input").files[0] || "")
 
     const configObj = {
-      headers: {
-        'Content-Type': 'application/json',
-        "Accept": "application/json"
-      },
       method: "POST",
-      body: JSON.stringify({name, image})
+      body
     }
+
+    console.log(configObj)
 
     return fetch(`http://localhost:3000/tile_templates`, configObj)
     .then(resp => resp.json())
-    .then(newLevel => newLevel.id ? this.showNewLevel(newLevel) : Promise.reject(newLevel))
+    .then(newTool => newTool.id ? this.showNewTool(newTool) : Promise.reject(newTool))
   }
 
-  showNewTool() {
-    console.log(tools)
+  showNewTool(tool) {
+    console.log(tool)
   }
 }

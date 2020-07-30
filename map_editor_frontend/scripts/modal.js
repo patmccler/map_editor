@@ -9,6 +9,7 @@ export class Modal {
   }
 
   buttonClicked() {
+    this.clearErrors()
     this.buttonCallback()
     // hide on success
     .then(() => this.hide())
@@ -28,16 +29,16 @@ export class Modal {
   }
 
   displayErrors(attrs) {
+    console.log("errors:", attrs)
     const errorDiv = this.div.querySelector("#modal-errors")
     errorDiv.innerText = ""
     for(let attr in attrs) {
-      errorDiv.innerText += `${attr}: ${attrs[attr].join(" ")}\n`
+      errorDiv.innerText += `${attr.replace("_"," ")}: ${attrs[attr].join(" ")}\n`
     }
   }
 
   clearErrors() {
-    const errorDiv = this.div.querySelector("#modal-errors")
-    errorDiv.innerText = ""
+  this.div.querySelector("#modal-errors").innerText = ""
   }
 
 }
