@@ -160,7 +160,7 @@ export class UIController {
 
   setupActionsMenu() {
 
-    document.getElementById("new-level").addEventListener("click", this.newLevelForm)
+    document.getElementById("new-level").addEventListener("click", this.newLevelForm.bind(this))
 
   }
 
@@ -179,12 +179,15 @@ export class UIController {
       }
     })
 
+    console.log(this)
+    const logModalError = this.logModalError
+    const showNewLevel = this.showNewLevel
+
     // add listener to button to submit
     document.getElementById("new-level-button").onclick = e => {
       let width = document.getElementById("width-input").value
       let height = document.getElementById("height-input").value
       let name = document.getElementById("name-input").value
-      console.log(width, height, name)
 
       const configObj = {
         headers: {
@@ -197,8 +200,23 @@ export class UIController {
 
       fetch(`http://localhost:3000/levels`, configObj)
       .then(resp => resp.json())
-      .then(newLevel => console.log(newLevel))
-      .catch(err => console.log(err))
+      .then(newLevel => newLevel.id ? showNewLevel(newLevel) : this.logModalError(newLevel))
+      .catch()
     }
+  }
+
+  showNewLevel(level) {
+    // this.levels.push(new Leve
+
+  }
+
+  logModalError(attrs) {
+    const errorDiv = document.getElementById("modal-errors")
+    errorDiv.innerText = ""
+    for(let attr in attrs) {
+      console.log(attr)
+      errorDiv.innerText += `${attr}: ${attrs[attr].join(" ")}\n`
+    }
+    return false
   }
 }

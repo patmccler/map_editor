@@ -230,6 +230,11 @@ html, body {
   cursor: pointer;
 }
 
+#modal-errors {
+  color: red;
+  font-style: bold;
+}
+
 .modal-header {
   padding: 2px 16px;
   background-color: lightgray;

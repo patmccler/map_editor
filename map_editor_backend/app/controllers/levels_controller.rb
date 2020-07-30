@@ -4,7 +4,9 @@ class LevelsController < ApplicationController
     if level.save
       render json: level.to_json(include: :tiles, except: %i[created_at updated_at])
     else
-      render json: level.errors.to_json(include: :tiles, except: %i[created_at updated_at])
+
+      render json: level.errors.to_json(include: :tiles, except: %i[created_at updated_at]),
+             status: 403
     end
   end
 
