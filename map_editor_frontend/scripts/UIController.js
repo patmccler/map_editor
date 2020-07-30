@@ -23,8 +23,9 @@ export class UIController {
     this.levels = levels
     this.currentLevel = current
     this.currentTool
+    this.modals
     this.populateTools()
-    this.modals = this.setupActionsMenu()
+    this.setupActionsMenu()
   }
 
   loop() {
@@ -169,7 +170,11 @@ export class UIController {
     document.getElementById("new-level").addEventListener("click", newLevelModal.show.bind(newLevelModal))
     document.getElementById("new-tool").addEventListener("click", newToolModal.show.bind(newToolModal))
 
-    return [newToolModal, newLevelModal]
+    //returns modals to controller
+    this.modals = new Map()
+    this.modals.set("tool", newToolModal)
+    this.modals.set("level", newLevelModal)
+    console.log(this.modals)
   }
 
   hideModals() {
@@ -192,7 +197,7 @@ export class UIController {
 
     fetch(`http://localhost:3000/levels`, configObj)
     .then(resp => resp.json())
-    .then(newLevel => newLevel.id ? this.showNewLevel(newLevel) : this.logModalError(newLevel))
+    .then(newLevel => newLevel.id ? this.showNewLevel(newLevel) : this.modals.get("level").displayErrors(newLevel))
     .catch()
   }
 
