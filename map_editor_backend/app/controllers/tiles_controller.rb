@@ -4,7 +4,7 @@ class TilesController < ApplicationController
     tile = level.tiles.build(tile_params)
 
     if tile.save
-      render json: tile, except: %i[:created_at updated_at]
+      render json: tile, except: %i[created_at updated_at]
     else
       render json: { msg: "Error saving tile for #{level.name} at #{tile.x}, #{tile.y}", errors: tile.errors }
     end

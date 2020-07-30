@@ -23,6 +23,7 @@ export class UIController {
     this.currentLevel = current
     this.currentTool
     this.populateTools()
+    this.setupActionsMenu()
   }
 
   loop() {
@@ -39,6 +40,7 @@ export class UIController {
   }
 
   chooseLevel(levelID) {
+    document.getElementById("levels-select").value = levelID
     this.currentLevel = this.levels.find(level => level.id === levelID)
     this.currentLevel.renderable = true
     this.currentLevel.firstRender = true
@@ -118,6 +120,7 @@ export class UIController {
     }
 
     let levelSelect = document.querySelector("#levels-select")
+    levelSelect.innerHTML = ""
     levels.forEach(level => levelSelect.appendChild(buildLevelOption(level)))
     levelSelect.addEventListener("change", e => this.chooseLevel(parseInt(e.target.value)))
   }
@@ -155,5 +158,75 @@ export class UIController {
       toolDiv.classList.add("selected")
       this.currentTool = this.constructor.tools.find(tool => tool.text === toolDiv.getAttribute("data-tool"))
     }
+  }
+
+  setupActionsMenu() {
+
+    document.getElementById("new-level").addEventListener("click", this.newLevelForm.bind(this))
+
+  }
+
+  newLevelForm() {
+    this.showModal()
+
+    document.getElementsByClassName("close")[0].onclick =  e => {
+      this.hideModal()
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.addEventListener("click", e => {
+      if (e.target === document.getElementById("new-level-modal")) {
+        this.hideModal()
+      }
+    })
+
+    const logModalError = this.logModalError
+    const showNewLevel = this.showNewLevel.bind(this)
+
+    // add listener to button to submit
+    document.getElementById("new-level-button").onclick = e => {
+      let width = document.getElementById("width-input").value
+      let height = document.getElementById("height-input").value
+      let name = document.getElementById("name-input").value
+
+      const configObj = {
+        headers: {
+          'Content-Type': 'application/json',
+          "Accept": "application/json"
+        },
+        method: "POST",
+        body: JSON.stringify({width, height, name})
+      }
+
+      fetch(`http://localhost:3000/levels`, configObj)
+      .then(resp => resp.json())
+      .then(newLevel => newLevel.id ? showNewLevel(newLevel) : this.logModalError(newLevel))
+      .catch()
+    }
+  }
+
+  hideModal() {
+    document.getElementById("new-level-modal").style.display = "none";
+  }
+
+  showModal() {
+    document.getElementById("new-level-modal").style.display = "block";
+  }
+
+  showNewLevel(level) {
+    this.hideModal()
+    level = Level.buildFromJSON(level, this.tileClicked.bind(this))
+    this.levels.push(level)
+    this.populateLevelSelect(this.levels)
+    this.chooseLevel(level.id)
+  }
+
+  logModalError(attrs) {
+    const errorDiv = document.getElementById("modal-errors")
+    errorDiv.innerText = ""
+    for(let attr in attrs) {
+      errorDiv.innerText += `${attr}: ${attrs[attr].join(" ")}\n`
+    }
+    return false
   }
 }
