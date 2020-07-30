@@ -8,14 +8,14 @@ import {Modal} from "./modal.js"
  */
 export class UIController {
   static tools = [
-    {text: "Toggle"},
+    {name: "Toggle"},
     {
-      text: "Door",
-      imageURL: "../assets/door_closed.png"
+      name: "Door",
+      tile_image_url: "../assets/door_closed.png"
     },
     {
-      text: "Stairs",
-      imageURL: "../assets/stair_down.png"
+      name: "Stairs",
+      tile_image_url: "../assets/stair_down.png"
     }
   ]
 
@@ -23,6 +23,7 @@ export class UIController {
     this.levels = levels
     this.currentLevel = current
     this.currentTool
+    this.tools
     this.populateTools()
     this.setupActionsMenu()
   }
@@ -50,23 +51,23 @@ export class UIController {
   tileClicked(col, row) {
     let tile = this.currentLevel.getMapAt(col,row)
 
-    if(this.currentTool.text === "Toggle") {
+    if(this.currentTool.name === "Toggle") {
       this.currentLevel.renderable = true
       let add = this.currentLevel.toggleTile(col,row)
       tile = this.currentLevel.getMapAt(col,row)
 
       this.neighborsRespondToDrag(col, row, add)
 
-    } else if (this.currentTool.imageURL) {
+    } else if (this.currentTool.tile_image_url) {
       this.currentLevel.renderable = true
 
-      if(tile && tile.imageURL !== this.currentTool.imageURL) {
-        tile.imageURL = this.currentTool.imageURL
+      if(tile && tile.imageURL !== this.currentTool.tile_image_url) {
+        tile.imageURL = this.currentTool.tile_image_url
         tile.rotation = 0
       } else if(tile) {
         tile.rotate()
       } else {
-        this.currentLevel.addTile(col, row, this.currentTool.imageURL)
+        this.currentLevel.addTile(col, row, this.currentTool.tile_image_url)
       }
     }
 
@@ -127,43 +128,46 @@ export class UIController {
   }
 
   populateTools() {
-    let tools = this.constructor.tools
-    let toolBox = document.getElementById("tool-box")
-
-    tools.forEach((tool, i) => {
-      let div = document.createElement("div")
-      div.classList.add("tool-button")
-      div.innerHTML = `<div>${tool.text}<div>`
-      div.setAttribute("data-tool", tool.text)
-      div.addEventListener("click", (e) => this.chooseTool(e.currentTarget))
-      if(i === 0) this.chooseTool(div)
-
-      if(tool.imageURL) {
-        div.appendChild(this.buildToolImg(tool.imageURL))
-      }
-
-      toolBox.appendChild(div)
+    this.fetchTools()
+    .then(tools => {
+      this.tools = this.constructor.tools.concat(tools)
+      this.tools.forEach((tool, i) => this.addTool(tool,i))
     })
   }
 
-  buildToolImg(imageURL) {
+  addTool(tool, i) {
+    let div = document.createElement("div")
+    div.classList.add("tool-button")
+    div.innerHTML = `<div>${tool.name}<div>`
+    div.setAttribute("data-tool", tool.name)
+    div.addEventListener("click", (e) => this.chooseTool(e.currentTarget))
+    if(i === 0) this.chooseTool(div)
+    console.log(tool)
+    if(tool.tile_image_url) {
+      console.log(tool)
+      div.appendChild(this.buildToolImg(tool.tile_image_url))
+    }
+
+    document.getElementById("tool-box").appendChild(div)
+  }
+
+  buildToolImg(tile_image_url) {
     let img = document.createElement("img")
     img.className = "tool-image"
-    img.src = imageURL
+    img.src = tile_image_url
     return img
   }
+
 
   chooseTool(toolDiv) {
     if(!toolDiv.classList.contains("selected")) {
       if(this.currentTool) document.querySelector(".tool-button.selected").classList.remove("selected")
       toolDiv.classList.add("selected")
-      this.currentTool = this.constructor.tools.find(tool => tool.text === toolDiv.getAttribute("data-tool"))
+      this.currentTool = this.tools.find(tool => tool.name === toolDiv.getAttribute("data-tool"))
     }
   }
 
   setupActionsMenu() {
-    this.fetchAndRenderTools()
-
     let newToolModal = new Modal(document.getElementById("new-tool-modal"), this.newToolSubmit.bind(this))
     let newLevelModal = new Modal(document.getElementById("new-level-modal"), this.newLevelSubmit.bind(this))
 
@@ -171,7 +175,7 @@ export class UIController {
     document.getElementById("new-tool").addEventListener("click", newToolModal.show.bind(newToolModal))
   }
 
-  fetchAndRenderTools() {
+  fetchTools() {
     const configObj = {
       headers: {
         'Content-Type': 'application/json',
@@ -179,9 +183,9 @@ export class UIController {
       }
     }
 
-    fetch(`http://localhost:3000/tile_templates`, configObj)
+    return fetch(`http://localhost:3000/tile_templates`, configObj)
     .then(resp => resp.json())
-    .then(tileTemplates => console.log(tileTemplates))
+    // .then(tileTemplates => tileTemplates.forEach(tileTemplate => this.renderTool(tileTemplate)))
   }
 
   hideModals() {
@@ -229,11 +233,12 @@ export class UIController {
     return fetch(`http://localhost:3000/tile_templates`, configObj)
     .then(resp => resp.json())
     .then(newTool => {
-      return newTool.id ? this.showNewTool(newTool) : Promise.reject(newTool)
+      return newTool.id ? this.createTool(newTool) : Promise.reject(newTool)
     })
   }
 
-  showNewTool(tool) {
-    console.log(tool)
+  createTool(tool) {
+    this.tools.push(tool)
+    this.addTool(tool, -1)
   }
 }

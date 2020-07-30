@@ -15,7 +15,9 @@ class TileTemplatesController < ApplicationController
   def create
     tile_template = TileTemplate.new(tile_template_params)
     if tile_template.save && params[:tile_template][:tile_image].present?
-      render json: tile_template.to_json(except: %i[created_at updated_at])
+      tile = tile_template.as_json(except: %i[created_at updated_at])
+      tile[:tile_image_url] = url_for(tile_template.tile_image)
+      render json: tile.to_json
     else
       render json: tile_template.errors.to_json,
              status: 403
