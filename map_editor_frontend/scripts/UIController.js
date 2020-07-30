@@ -195,10 +195,9 @@ export class UIController {
       body: JSON.stringify({width, height, name})
     }
 
-    fetch(`http://localhost:3000/levels`, configObj)
+    return fetch(`http://localhost:3000/levels`, configObj)
     .then(resp => resp.json())
-    .then(newLevel => newLevel.id ? this.showNewLevel(newLevel) : this.modals.get("level").displayErrors(newLevel))
-    .catch()
+    .then(newLevel => newLevel.id ? this.showNewLevel(newLevel) : Promise.reject(newLevel))
   }
 
   showNewLevel(level) {
@@ -207,14 +206,5 @@ export class UIController {
     this.levels.push(level)
     this.populateLevelSelect(this.levels)
     this.chooseLevel(level.id)
-  }
-
-  logModalError(attrs) {
-    const errorDiv = document.getElementById("modal-errors")
-    errorDiv.innerText = ""
-    for(let attr in attrs) {
-      errorDiv.innerText += `${attr}: ${attrs[attr].join(" ")}\n`
-    }
-    return false
   }
 }
