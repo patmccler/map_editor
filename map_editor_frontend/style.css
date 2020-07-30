@@ -163,6 +163,7 @@ footer {
 }
 
 .action {
+  width: 5vh;
   border: 2px solid black;
   border-radius: 5px;
   text-align: center;
@@ -171,7 +172,7 @@ footer {
   cursor: pointer;
 }
 
-#action-header + .action:hover {
+#action-header ~ .action:hover {
   background-color: lightgray;
 }
 

@@ -3,4 +3,6 @@ Rails.application.routes.draw do
   resources :levels, only: %i[index create] do
     resources :tiles, only: %i[create update destroy]
   end
+
+  resources :tile_templates
 end
