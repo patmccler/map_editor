@@ -161,9 +161,9 @@ export class UIController {
   }
 
   setupActionsMenu() {
-
+    //TODO: update once modal is refactored to a class?
     document.getElementById("new-level").addEventListener("click", this.newLevelForm.bind(this))
-
+    document.getElementById("new-tool").addEventListener("click", this.newToolForm.bind(this))
   }
 
   newLevelForm() {
@@ -188,7 +188,7 @@ export class UIController {
     document.getElementById("new-level-button").onclick = e => {
       let width = document.getElementById("width-input").value
       let height = document.getElementById("height-input").value
-      let name = document.getElementById("name-input").value
+      let name = document.getElementById("level-name-input").value
 
       const configObj = {
         headers: {
@@ -206,8 +206,14 @@ export class UIController {
     }
   }
 
+  newToolForm() {
+    this.closeModals()
+    this.showNewToolModal()
+  }
+
   closeModals() {
     this.hideNewLevelModal()
+    this.hideNewToolModal()
   }
 
   hideNewLevelModal() {
@@ -217,6 +223,15 @@ export class UIController {
   showNewLevelModal() {
     this.showModal(document.getElementById("new-level-modal"))
   }
+
+  showNewToolModal() {
+    this.showModal(document.getElementById("new-tool-modal"))
+  }
+
+  hideNewToolModal() {
+    this.hideModal(document.getElementById("new-tool-modal"))
+  }
+
 
   hideModal(elem) {
     elem.style.display = "none"

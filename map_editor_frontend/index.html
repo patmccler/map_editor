@@ -36,7 +36,9 @@
     <footer>
       <div id="action-header" class="action">Actions</div>
       <div id="new-level" class="action"> New <br>Level </div>
+      <div id="new-tool" class="action"> New <br>Tile </div>
     </footer>
+    <!-- New Level Modal -->
     <div id="new-level-modal" class="modal">
 
       <!-- Modal content -->
@@ -48,7 +50,7 @@
         <div class="modal-body">
           <div id="modal-errors"></div>
           <label>Level Name:</label>
-          <input id="name-input"><br>
+          <input id="level-name-input"><br>
           <label>Width:</label>
           <input id="width-input" type="number"><br>
           <label>Height:</label>
@@ -57,9 +59,27 @@
         </div>
       </div>
 
-    </div>
   </div>
+  <!-- New Tool Modal -->
+  <div id="new-tool-modal" class="modal">
 
+    <!-- Modal content -->
+    <div class="modal-content">
+      <div class="modal-header">
+        <span id="close-new-tool" class="close">&times;</span>
+        <h2>Add a New Tile</h2>
+      </div>
+      <div class="modal-body">
+        <div id="modal-errors"></div>
+        <label>Tile Name:</label>
+        <input id="name-input"><br>
+        <label>Choose an image:</label>
+        <input id="width-input" type="file" accept="image/png, image/jpeg"><br>
+        <button id="new-level-button">Create Tile</button>
+      </div>
+    </div>
+
+  </div>
 
   <script type="module" src="./scripts/index.js"></script>
 </body>
