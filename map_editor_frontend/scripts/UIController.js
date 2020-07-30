@@ -167,21 +167,19 @@ export class UIController {
   }
 
   newLevelForm() {
-    let modal = document.getElementById("new-level-modal")
-    modal.style.display = "block";
+    this.showModal()
 
-    document.getElementsByClassName("close")[0].addEventListener("click", e => {
-      modal.style.display = "none";
-    })
+    document.getElementsByClassName("close")[0].onclick =  e => {
+      this.hideModal()
+    }
 
     // When the user clicks anywhere outside of the modal, close it
     window.addEventListener("click", e => {
-      if (e.target === modal) {
-        modal.style.display = "none";
+      if (e.target === document.getElementById("new-level-modal")) {
+        this.hideModal()
       }
     })
 
-    console.log(this)
     const logModalError = this.logModalError
     const showNewLevel = this.showNewLevel.bind(this)
 
@@ -207,7 +205,16 @@ export class UIController {
     }
   }
 
+  hideModal() {
+    document.getElementById("new-level-modal").style.display = "none";
+  }
+
+  showModal() {
+    document.getElementById("new-level-modal").style.display = "block";
+  }
+
   showNewLevel(level) {
+    this.hideModal()
     level = Level.buildFromJSON(level, this.tileClicked.bind(this))
     this.levels.push(level)
     this.populateLevelSelect(this.levels)
