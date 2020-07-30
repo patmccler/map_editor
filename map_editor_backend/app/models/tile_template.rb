@@ -1,0 +1,2 @@
+class TileTemplate < ApplicationRecord
+end
