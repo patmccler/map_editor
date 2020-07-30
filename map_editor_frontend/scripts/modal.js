@@ -10,6 +10,7 @@ export class Modal {
 
   buttonClicked() {
     this.buttonCallback()
+    .then(() => this.hide())
     .catch(errAttrs => this.displayErrors(errAttrs))
   }
 
