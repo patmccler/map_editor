@@ -162,7 +162,7 @@ export class UIController {
   }
 
   setupActionsMenu() {
-    let newToolModal = new Modal(document.getElementById("new-tool-modal"), null)
+    let newToolModal = new Modal(document.getElementById("new-tool-modal"), this.newToolSubmit.bind(this))
     let newLevelModal = new Modal(document.getElementById("new-level-modal"), this.newLevelSubmit.bind(this))
     console.log(newToolModal)
 
@@ -198,5 +198,28 @@ export class UIController {
     this.levels.push(level)
     this.populateLevelSelect(this.levels)
     this.chooseLevel(level.id)
+  }
+
+  newToolSubmit(e) {
+    let name = document.getElementById("tool-name-input").value
+    let image = document.getElementById("tool-image-input").value
+    console.log(name, image)
+
+    const configObj = {
+      headers: {
+        'Content-Type': 'application/json',
+        "Accept": "application/json"
+      },
+      method: "POST",
+      body: JSON.stringify({name, image})
+    }
+
+    return fetch(`http://localhost:3000/tile_templates`, configObj)
+    .then(resp => resp.json())
+    .then(newLevel => newLevel.id ? this.showNewLevel(newLevel) : Promise.reject(newLevel))
+  }
+
+  showNewTool() {
+    console.log(tools)
   }
 }
