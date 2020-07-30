@@ -40,6 +40,7 @@ export class UIController {
   }
 
   chooseLevel(levelID) {
+    document.getElementById("levels-select").value = levelID
     this.currentLevel = this.levels.find(level => level.id === levelID)
     this.currentLevel.renderable = true
     this.currentLevel.firstRender = true
@@ -119,6 +120,7 @@ export class UIController {
     }
 
     let levelSelect = document.querySelector("#levels-select")
+    levelSelect.innerHTML = ""
     levels.forEach(level => levelSelect.appendChild(buildLevelOption(level)))
     levelSelect.addEventListener("change", e => this.chooseLevel(parseInt(e.target.value)))
   }
@@ -181,7 +183,7 @@ export class UIController {
 
     console.log(this)
     const logModalError = this.logModalError
-    const showNewLevel = this.showNewLevel
+    const showNewLevel = this.showNewLevel.bind(this)
 
     // add listener to button to submit
     document.getElementById("new-level-button").onclick = e => {
@@ -206,15 +208,16 @@ export class UIController {
   }
 
   showNewLevel(level) {
-    // this.levels.push(new Leve
-
+    level = Level.buildFromJSON(level, this.tileClicked.bind(this))
+    this.levels.push(level)
+    this.populateLevelSelect(this.levels)
+    this.chooseLevel(level.id)
   }
 
   logModalError(attrs) {
     const errorDiv = document.getElementById("modal-errors")
     errorDiv.innerText = ""
     for(let attr in attrs) {
-      console.log(attr)
       errorDiv.innerText += `${attr}: ${attrs[attr].join(" ")}\n`
     }
     return false
