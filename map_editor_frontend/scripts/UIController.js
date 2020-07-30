@@ -1,4 +1,5 @@
 import {Level} from "./level.js"
+import {Modal} from "./modal.js"
 
 /**
  * There should only be one of this clas
@@ -23,7 +24,7 @@ export class UIController {
     this.currentLevel = current
     this.currentTool
     this.populateTools()
-    this.setupActionsMenu()
+    this.modals = this.setupActionsMenu()
   }
 
   loop() {
@@ -161,89 +162,42 @@ export class UIController {
   }
 
   setupActionsMenu() {
-    //TODO: update once modal is refactored to a class?
-    document.getElementById("new-level").addEventListener("click", this.newLevelForm.bind(this))
-    document.getElementById("new-tool").addEventListener("click", this.newToolForm.bind(this))
+    let newToolModal = new Modal(document.getElementById("new-tool-modal"), null)
+    let newLevelModal = new Modal(document.getElementById("new-level-modal"), this.newLevelSubmit.bind(this))
+    console.log(newToolModal)
+
+    document.getElementById("new-level").addEventListener("click", newLevelModal.show.bind(newLevelModal))
+    document.getElementById("new-tool").addEventListener("click", newToolModal.show.bind(newToolModal))
+
+    return [newToolModal, newLevelModal]
   }
 
-  newLevelForm() {
-    this.closeModals()
-    this.showNewLevelModal()
+  hideModals() {
+    this.modals.forEach(modal => modal.hide())
+  }
 
-    document.getElementById("close-new-level").onclick =  e => {
-      this.hideNewLevelModal()
+  newLevelSubmit(e) {
+    let width = document.getElementById("width-input").value
+    let height = document.getElementById("height-input").value
+    let name = document.getElementById("level-name-input").value
+
+    const configObj = {
+      headers: {
+        'Content-Type': 'application/json',
+        "Accept": "application/json"
+      },
+      method: "POST",
+      body: JSON.stringify({width, height, name})
     }
 
-    // When the user clicks anywhere outside of the modal, close it
-    window.addEventListener("click", e => {
-      if (e.target === document.getElementById("new-level-modal")) {
-        this.hideNewLevelModal()
-      }
-    })
-
-    const logModalError = this.logModalError
-    const showNewLevel = this.showNewLevel.bind(this)
-
-    // add listener to button to submit
-    document.getElementById("new-level-button").onclick = e => {
-      let width = document.getElementById("width-input").value
-      let height = document.getElementById("height-input").value
-      let name = document.getElementById("level-name-input").value
-
-      const configObj = {
-        headers: {
-          'Content-Type': 'application/json',
-          "Accept": "application/json"
-        },
-        method: "POST",
-        body: JSON.stringify({width, height, name})
-      }
-
-      fetch(`http://localhost:3000/levels`, configObj)
-      .then(resp => resp.json())
-      .then(newLevel => newLevel.id ? showNewLevel(newLevel) : this.logModalError(newLevel))
-      .catch()
-    }
-  }
-
-  newToolForm() {
-    this.closeModals()
-    this.showNewToolModal()
-  }
-
-  closeModals() {
-    this.hideNewLevelModal()
-    this.hideNewToolModal()
-  }
-
-  hideNewLevelModal() {
-    this.hideModal(document.getElementById("new-level-modal"))
-  }
-
-  showNewLevelModal() {
-    this.showModal(document.getElementById("new-level-modal"))
-  }
-
-  showNewToolModal() {
-    this.showModal(document.getElementById("new-tool-modal"))
-  }
-
-  hideNewToolModal() {
-    this.hideModal(document.getElementById("new-tool-modal"))
-  }
-
-
-  hideModal(elem) {
-    elem.style.display = "none"
-  }
-
-
-  showModal(elem) {
-    elem.style.display = "block";
+    fetch(`http://localhost:3000/levels`, configObj)
+    .then(resp => resp.json())
+    .then(newLevel => newLevel.id ? this.showNewLevel(newLevel) : this.logModalError(newLevel))
+    .catch()
   }
 
   showNewLevel(level) {
-    this.hideNewLevelModal()
+    this.hideModals()
     level = Level.buildFromJSON(level, this.tileClicked.bind(this))
     this.levels.push(level)
     this.populateLevelSelect(this.levels)
