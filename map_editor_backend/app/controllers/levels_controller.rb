@@ -1,7 +1,11 @@
 class LevelsController < ApplicationController
-  def show
-    level = Level.find(params[:id])
-    render json: level.to_json(include: :tiles, except: %i[created_at updated_at])
+  def create
+    level = Level.new(params[:id])
+    if level.save
+      render json: level.to_json(include: :tiles, except: %i[created_at updated_at])
+    else
+      render json: level.errors.to_json(include: :tiles, except: %i[created_at updated_at])
+    end
   end
 
   def index

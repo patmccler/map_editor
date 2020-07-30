@@ -178,5 +178,27 @@ export class UIController {
         modal.style.display = "none";
       }
     })
+
+    // add listener to button to submit
+    document.getElementById("new-level-button").onclick = e => {
+      let width = document.getElementById("width-input").value
+      let height = document.getElementById("height-input").value
+      let name = document.getElementById("name-input").value
+      console.log(width, height, name)
+
+      const configObj = {
+        headers: {
+          'Content-Type': 'application/json',
+          "Accept": "application/json"
+        },
+        method: "POST",
+        body: JSON.stringify({width, height, name})
+      }
+
+      fetch(`http://localhost:3000/levels`, configObj)
+      .then(resp => resp.json())
+      .then(newLevel => console.log(newLevel))
+      .catch(err => console.log(err))
+    }
   }
 }

@@ -6,6 +6,7 @@ import {UIController} from "./UIController.js"
  *
  */
 document.addEventListener("DOMContentLoaded", e => {
+  // TODO: move this to its own file?
   const BASE_URL = "http://localhost:3000"
   const LEVELS_URL = `${BASE_URL}/levels`
   const HEADERS = {
