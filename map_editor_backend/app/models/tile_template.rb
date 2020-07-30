@@ -6,8 +6,8 @@ class TileTemplate < ApplicationRecord
 private
 
   def tile_image_present
-    return unless tile_image.blank?
-
+    return unless tile_image && !tile_image&.blank?
+  rescue ActiveSupport::MessageVerifier::InvalidSignature
     errors.add("Image", "You must choose an image")
   end
 end

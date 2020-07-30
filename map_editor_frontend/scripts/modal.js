@@ -29,12 +29,18 @@ export class Modal {
   }
 
   displayErrors(attrs) {
-    console.log("errors:", attrs)
     const errorDiv = this.div.querySelector("#modal-errors")
     errorDiv.innerText = ""
-    for(let attr in attrs) {
-      errorDiv.innerText += `${attr.replace("_"," ")}: ${attrs[attr].join(" ")}\n`
-    }
+
+
+      for(let attr in attrs) {
+        let val = attrs[attr]
+
+        errorDiv.innerText += `${attr.replace("_"," ")}: ${(Array.isArray(val) ? val.join(" ") : val)}\n`
+      }
+      console.log("errors:", attrs)
+
+
   }
 
   clearErrors() {

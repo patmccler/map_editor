@@ -5,8 +5,8 @@ class TileTemplatesController < ApplicationController
 
   def create
     tile_template = TileTemplate.new(tile_template_params)
-
-    if tile_template.save
+    # binding.pry
+    if tile_template.save && params[:post][:image].present?
       render json: tile_template
     else
       render json: tile_template.errors

@@ -203,7 +203,7 @@ export class UIController {
   newToolSubmit(e) {
 
     let body = new FormData()
-    body.append("tile_template[name]", document.getElementById("tool-name-input").value || "")
+    body.append("tile_template[name]", document.getElementById("tool-name-input").value)
     body.append("tile_template[tile_image]", document.getElementById("tool-image-input").files[0] || "")
 
     const configObj = {
@@ -211,7 +211,7 @@ export class UIController {
       body
     }
 
-    console.log(configObj)
+    console.log(body)
 
     return fetch(`http://localhost:3000/tile_templates`, configObj)
     .then(resp => resp.json())
