@@ -162,11 +162,26 @@ export class UIController {
   }
 
   setupActionsMenu() {
+    this.fetchAndRenderTools()
+
     let newToolModal = new Modal(document.getElementById("new-tool-modal"), this.newToolSubmit.bind(this))
     let newLevelModal = new Modal(document.getElementById("new-level-modal"), this.newLevelSubmit.bind(this))
 
     document.getElementById("new-level").addEventListener("click", newLevelModal.show.bind(newLevelModal))
     document.getElementById("new-tool").addEventListener("click", newToolModal.show.bind(newToolModal))
+  }
+
+  fetchAndRenderTools() {
+    const configObj = {
+      headers: {
+        'Content-Type': 'application/json',
+        "Accept": "application/json"
+      }
+    }
+
+    fetch(`http://localhost:3000/tile_templates`, configObj)
+    .then(resp => resp.json())
+    .then(tileTemplates => console.log(tileTemplates))
   }
 
   hideModals() {
