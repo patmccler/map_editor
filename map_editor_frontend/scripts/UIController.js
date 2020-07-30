@@ -219,7 +219,6 @@ export class UIController {
   }
 
   newToolSubmit(e) {
-
     let body = new FormData()
     body.append("tile_template[name]", document.getElementById("tool-name-input").value)
     body.append("tile_template[tile_image]", document.getElementById("tool-image-input").files[0] || "")
@@ -228,11 +227,11 @@ export class UIController {
       method: "POST",
       body
     }
-
-
     return fetch(`http://localhost:3000/tile_templates`, configObj)
     .then(resp => resp.json())
     .then(newTool => {
+      document.getElementById("tool-name-input").value = ""
+      document.getElementById("tool-image-input").value = ""
       return newTool.id ? this.createTool(newTool) : Promise.reject(newTool)
     })
   }
