@@ -164,7 +164,6 @@ export class UIController {
   setupActionsMenu() {
     let newToolModal = new Modal(document.getElementById("new-tool-modal"), this.newToolSubmit.bind(this))
     let newLevelModal = new Modal(document.getElementById("new-level-modal"), this.newLevelSubmit.bind(this))
-    console.log(newToolModal)
 
     document.getElementById("new-level").addEventListener("click", newLevelModal.show.bind(newLevelModal))
     document.getElementById("new-tool").addEventListener("click", newToolModal.show.bind(newToolModal))
@@ -211,11 +210,12 @@ export class UIController {
       body
     }
 
-    console.log(body)
 
     return fetch(`http://localhost:3000/tile_templates`, configObj)
     .then(resp => resp.json())
-    .then(newTool => newTool.id ? this.showNewTool(newTool) : Promise.reject(newTool))
+    .then(newTool => {
+      return newTool.id ? this.showNewTool(newTool) : Promise.reject(newTool)
+    })
   }
 
   showNewTool(tool) {

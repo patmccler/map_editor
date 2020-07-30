@@ -3,7 +3,6 @@ export class Modal {
   constructor(div, buttonCallback) {
     this.div = div
     this.buttonCallback = buttonCallback
-    console.log(div)
     div.querySelector(".modal-button").onclick = this.buttonClicked.bind(this)//buttonCallback
     div.querySelector(".close").onclick = e => this.hide()
   }
